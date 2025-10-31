@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>{% block title %}Proof Approval{% endblock %}</title>
+  <!-- Main stylesheet -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!-- Dynamic theme CSS -->
+  <link rel="stylesheet" href="{{ url_for('theme_css') }}">
+  <style>
+    /* Dynamic CSS variables from branding */
+    :root {
+      --primary-color: {{ branding.primary_color }};
+      --background-color: {{ branding.background_color }};
+      --approve-color: {{ branding.approve_button_color }};
+      --reject-color: {{ branding.reject_button_color }};
+      --general-btn-color: {{ branding.general_button_color }};
+    }
+    body {
+      background: var(--background-color);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 900px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.05);
+    }
+    nav {
+      background: var(--primary-color);
+      padding: 1rem;
+      margin-bottom: 1rem;
+    }
+    nav a {
+      color: white;
+      margin-right: 1rem;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <nav>
+    {% if current_user %}
+      {% if current_user.role == 'admin' %}
+        <a href="{{ url_for('admin.admin_home') }}">Admin</a>
+        <a href="{{ url_for('admin.admin_dashboard') }}">Dashboard</a>
+        <a href="{{ url_for('upload') }}">Upload Proof</a>
+        <a href="{{ url_for('admin.admin_users') }}">Users</a>
+        <a href="{{ url_for('admin.admin_customers') }}">Customers</a>
+        <a href="{{ url_for('admin.admin_settings') }}">Settings</a>
+        <a href="{{ url_for('admin.upload_logo') }}">Logo</a>
+        <a href="{{ url_for('admin.admin_disclaimer') }}">Disclaimer</a>
+        <a href="{{ url_for('admin.export_csv') }}">Export</a>
+      {% else %}
+        <a href="{{ url_for('designer_dashboard') }}">My Proofs</a>
+        <a href="{{ url_for('upload') }}">Upload Proof</a>
+        <a href="{{ url_for('designer_customers') }}">Customers</a>
+      {% endif %}
+      <a href="{{ url_for('logout') }}">Logout</a>
+    {% else %}
+      <a href="{{ url_for('login') }}">Login</a>
+    {% endif %}
+  </nav>
+
+  <div class="container">
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        <div class="flash-messages">
+          {% for category, message in messages %}
+            <div class="flash-message {{ category }}">{{ message }}</div>
+          {% endfor %}
+        </div>
+      {% endif %}
+    {% endwith %}
+    {% block content %}{% endblock %}
+  </div>
+</body>
+</html>

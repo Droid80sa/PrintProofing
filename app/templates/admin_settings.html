@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block title %}Admin – Branding Settings{% endblock %}
+{% block content %}
+<div class="form-container"> {# Wrap content in form-container for consistent styling #}
+  <h1>Branding Settings</h1>
+  <form method="POST" class="modern-form"> {# Apply modern-form class #}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group">
+      <label for="company-name">Company Name:</label>
+      <input type="text" id="company-name" name="company_name" value="{{ branding.company_name }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="primary-color">Primary Color:</label>
+      <input type="color" id="primary-color" name="primary_color" value="{{ branding.primary_color }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="background-color">Background Color:</label>
+      <input type="color" id="background-color" name="background_color" value="{{ branding.background_color }}" required>
+    </div>
+
+    <div class="form-group">
+      {# Changed name to approve_button_color to match app.py's branding key #}
+      <label for="approve-button-color">Approve Button Color:</label>
+      <input type="color" id="approve-button-color" name="approve_button_color" value="{{ branding.approve_button_color }}" required>
+    </div>
+
+    <div class="form-group">
+      {# Added input for reject button color for complete control #}
+      <label for="reject-button-color">Reject Button Color:</label>
+      <input type="color" id="reject-button-color" name="reject_button_color" value="{{ branding.reject_button_color }}" required>
+    </div>
+
+    <div class="form-group">
+      {# New input for general button color #}
+      <label for="general-button-color">General Button Color:</label>
+      <input type="color" id="general-button-color" name="general_button_color" value="{{ branding.general_button_color }}" required>
+    </div>
+
+    <div class="form-group">
+      <label for="font-family">Font Family (CSS value):</label>
+      <input type="text" id="font-family" name="font_family" value="{{ branding.font_family }}" placeholder="e.g., 'Roboto, sans-serif'">
+    </div>
+
+    <div class="form-group">
+      <label for="email-footer">Email Footer:</label>
+      <textarea id="email-footer" name="email_footer" rows="4">{{ branding.email_footer }}</textarea>
+    </div>
+
+    <button type="submit" class="submit-button">💾 Save Settings</button> {# Use the submit-button class #}
+  </form>
+</div>
+{% endblock %}

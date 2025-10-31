@@ -1,0 +1,147 @@
+{% extends "base.html" %}
+{% block title %}Manage Users – {{ branding.company_name }}{% endblock %}
+{% block content %}
+<div class="container-content">
+  <h1>User Management</h1>
+
+  <style>
+    .smtp-badge {
+      display: inline-block;
+      padding: 0.2rem 0.6rem;
+      border-radius: 999px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+    .smtp-badge.info {
+      background: #d1ecf1;
+      color: #0c5460;
+    }
+    .smtp-badge.success {
+      background: #d4edda;
+      color: #155724;
+    }
+    .smtp-badge.warning {
+      background: #fff3cd;
+      color: #856404;
+    }
+    .smtp-badge.error {
+      background: #f8d7da;
+      color: #721c24;
+    }
+  </style>
+
+  <section style="margin-bottom:2rem;">
+    <h2>Create User</h2>
+    <form method="post" class="modern-form" action="{{ url_for('admin.admin_users') }}">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <input type="hidden" name="action" value="create">
+      <div class="form-group">
+        <label for="email">Email</label>
+        <input type="email" id="email" name="email" required>
+      </div>
+      <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" id="name" name="name" required>
+      </div>
+      <div class="form-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" required>
+      </div>
+      <div class="form-group">
+        <label for="role">Role</label>
+        <select id="role" name="role">
+          <option value="admin">Admin</option>
+          <option value="designer">Designer</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="designer_display_name">Designer display name (if applicable)</label>
+        <input type="text" id="designer_display_name" name="designer_display_name">
+      </div>
+      <div class="form-group">
+        <label for="designer_reply_to">Designer reply-to email (optional)</label>
+        <input type="email" id="designer_reply_to" name="designer_reply_to">
+      </div>
+      <button type="submit" class="submit-button">Create User</button>
+    </form>
+  </section>
+
+  <section>
+    <h2>Existing Users</h2>
+    {% if users %}
+      <table class="dashboard-table">
+        <thead>
+          <tr>
+            <th>Email</th>
+            <th>Name</th>
+            <th>Role</th>
+            <th>Status</th>
+            <th>SMTP</th>
+            <th>Updated</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for user in users %}
+          <tr>
+            <td>{{ user.email }}</td>
+            <td>{{ user.name }}</td>
+            <td>{{ user.role|capitalize }}</td>
+            <td>{{ 'Active' if user.is_active else 'Inactive' }}</td>
+            <td>
+              {% set has_config = user.smtp_host and user.smtp_port %}
+              {% set last_test_display = user.smtp_last_test_at.strftime('%Y-%m-%d %H:%M UTC') if user.smtp_last_test_at else '' %}
+              {% if not has_config %}
+                <span class="smtp-badge warning">Not configured</span>
+              {% elif user.smtp_last_test_status == 'failed' %}
+                <span class="smtp-badge error" {% if last_test_display %}title="Failed {{ last_test_display }}"{% endif %}>Failed</span>
+              {% elif user.smtp_last_test_status == 'success' %}
+                <span class="smtp-badge success" {% if last_test_display %}title="Tested {{ last_test_display }}"{% endif %}>OK</span>
+              {% else %}
+                <span class="smtp-badge info">Not tested</span>
+              {% endif %}
+            </td>
+            <td>{{ user.updated_at or user.created_at }}</td>
+            <td>
+              <a href="{{ url_for('admin.admin_user_edit', user_id=user.id) }}" class="button">Edit</a>
+              <form method="post" class="inline-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="action" value="toggle">
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <button type="submit" class="button">{{ 'Deactivate' if user.is_active else 'Activate' }}</button>
+              </form>
+              <form method="post" class="inline-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="action" value="reset_password">
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <input type="password" name="new_password" placeholder="New password" required>
+                <button type="submit" class="button">Reset Password</button>
+              </form>
+              <form method="post" class="inline-form">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="action" value="update_role">
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <select name="role">
+                  <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                  <option value="designer" {% if user.role == 'designer' %}selected{% endif %}>Designer</option>
+                </select>
+                <button type="submit" class="button">Update Role</button>
+              </form>
+              <form method="post" class="inline-form" onsubmit="return confirm('Delete {{ user.email }}? This cannot be undone.');">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="user_id" value="{{ user.id }}">
+                <button type="submit" class="button reject">Delete</button>
+              </form>
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    {% else %}
+      <p>No users found.</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

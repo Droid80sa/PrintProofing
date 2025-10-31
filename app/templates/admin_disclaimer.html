@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Edit Disclaimer{% endblock %}
+{% block content %}
+<div class="form-container"> {# Wrap in form-container #}
+  <h1>Edit Approval Disclaimer</h1>
+  <form method="POST" class="modern-form"> {# Apply modern-form class #}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group"> {# Wrap textarea in form-group #}
+      <label for="disclaimer_content">Disclaimer Content:</label> {# Added label #}
+      <textarea id="disclaimer_content" name="disclaimer" rows="12">{{ disclaimer }}</textarea> {# Added {{ disclaimer }} here #}
+    </div>
+    <button type="submit" class="submit-button">💾 Save Disclaimer</button> {# Apply submit-button class #}
+  </form>
+</div>
+{% endblock %}

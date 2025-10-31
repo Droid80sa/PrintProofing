@@ -1,0 +1,209 @@
+{% extends "base.html" %}
+{% block title %}Upload New Version – {{ branding.company_name }}{% endblock %}
+{% block content %}
+<div class="form-container">
+    <h1>Upload New Version for {{ proof.job_name }}</h1>
+    <form method="post" enctype="multipart/form-data" class="modern-form" id="uploadForm" action="{{ url_for('new_version', job_id=proof.share_id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="form-group">
+            <label for="notes">Optional Notes:</label>
+            <textarea id="notes" name="notes" rows="4" aria-describedby="notes-help"></textarea>
+            <small id="notes-help" class="help-text">Add any relevant details or instructions for this version.</small>
+        </div>
+
+        <div class="form-group">
+            <label for="file-upload">Select PDF or Image:</label>
+            <input type="file" id="file-upload" name="file" accept=".pdf,.jpg,.jpeg,.png" required aria-describedby="file-upload-help">
+            <small id="file-upload-help" class="help-text">Accepted formats: PDF, JPG, JPEG, PNG.</small>
+        </div>
+
+        <div class="upload-progress" id="uploadProgressWrapper" hidden>
+            <progress id="uploadProgress" value="0" max="100"></progress>
+            <span id="uploadProgressLabel">Preparing upload…</span>
+        </div>
+
+        <button type="submit" class="submit-button" id="uploadSubmit">
+            <span class="emoji">📤</span> Upload New Version
+        </button>
+    </form>
+</div>
+
+<style>
+    /* Basic Styling for improved readability */
+    .form-container {
+        max-width: 600px;
+        margin: 40px auto;
+        padding: 30px;
+        background-color: #ffffff; /* White background for clarity */
+        border-radius: 8px;
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        font-family: Arial, sans-serif; /* Consistent, readable font */
+        color: #333;
+    }
+
+    h1 {
+        text-align: center;
+        color: #2c3e50; /* Darker heading for contrast */
+        margin-bottom: 30px;
+        font-size: 2em;
+    }
+
+    .modern-form .form-group {
+        margin-bottom: 20px; /* More space between form elements */
+    }
+
+    .modern-form label {
+        display: block; /* Labels on their own line */
+        margin-bottom: 8px;
+        font-weight: bold;
+        color: #555;
+    }
+
+    .modern-form input[type="text"],
+    .modern-form textarea,
+    .modern-form input[type="file"] {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        box-sizing: border-box; /* Include padding in element's total width and height */
+        font-size: 1em;
+        line-height: 1.5;
+    }
+
+    .modern-form textarea {
+        resize: vertical; /* Allow vertical resizing for notes */
+    }
+
+    .modern-form input[type="file"] {
+        padding: 10px; /* Adjust padding for file input */
+    }
+
+    .modern-form input[type="text"]:focus,
+    .modern-form textarea:focus,
+    .modern-form input[type="file"]:focus {
+        border-color: #007bff; /* Highlight on focus */
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25);
+    }
+
+    .help-text {
+        font-size: 0.85em;
+        color: #777;
+        margin-top: 5px;
+        display: block; /* Ensure help text is on its own line */
+    }
+
+    .submit-button {
+        display: block;
+        width: 100%;
+        padding: 15px;
+        background-color: #28a745; /* Green for success/action */
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        font-size: 1.1em;
+        font-weight: bold;
+        cursor: pointer;
+        transition: background-color 0.3s ease;
+        text-align: center;
+    }
+
+    .submit-button:hover {
+        background-color: #218838; /* Darker green on hover */
+    }
+
+    .submit-button .emoji {
+        margin-right: 8px;
+    }
+
+    .upload-progress {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        margin-bottom: 1rem;
+    }
+
+    progress {
+        width: 100%;
+        height: 12px;
+        border-radius: 6px;
+        overflow: hidden;
+        -webkit-appearance: none;
+        appearance: none;
+    }
+
+    progress::-webkit-progress-bar {
+        background-color: #f1f1f1;
+    }
+
+    progress::-webkit-progress-value {
+        background-color: var(--primary-color, #007bff);
+    }
+
+    progress::-moz-progress-bar {
+        background-color: var(--primary-color, #007bff);
+    }
+</style>
+
+<script>
+  (function() {
+    const form = document.getElementById('uploadForm');
+    if (!form || !window.XMLHttpRequest) {
+      return;
+    }
+    const fileInput = document.getElementById('file-upload');
+    const progressWrapper = document.getElementById('uploadProgressWrapper');
+    const progressBar = document.getElementById('uploadProgress');
+    const progressLabel = document.getElementById('uploadProgressLabel');
+    const submitButton = document.getElementById('uploadSubmit');
+    const fallbackHint = document.getElementById('uploadFallbackHint');
+
+    form.addEventListener('submit', function(evt) {
+      if (!fileInput.files.length) {
+        return;
+      }
+      evt.preventDefault();
+
+      const formData = new FormData(form);
+      const xhr = new XMLHttpRequest();
+
+      progressWrapper.hidden = false;
+      fallbackHint.hidden = false;
+      submitButton.disabled = true;
+      submitButton.innerText = 'Uploading…';
+
+      xhr.upload.addEventListener('progress', function(event) {
+        if (!event.lengthComputable) {
+          return;
+        }
+        const percent = Math.round((event.loaded / event.total) * 100);
+        progressBar.value = percent;
+        progressLabel.textContent = percent >= 100 ? 'Processing server response…' : `Uploading ${percent}%`;
+      });
+
+      xhr.addEventListener('load', function() {
+        if (xhr.status >= 200 && xhr.status < 300) {
+          document.open();
+          document.write(xhr.responseText);
+          document.close();
+        } else {
+          progressLabel.textContent = 'Upload failed. Please try again.';
+          submitButton.disabled = false;
+          submitButton.innerText = '📤 Upload New Version';
+        }
+      });
+
+      xhr.addEventListener('error', function() {
+        progressLabel.textContent = 'Network error. Please retry.';
+        submitButton.disabled = false;
+        submitButton.innerText = '📤 Upload New Version';
+      });
+
+      xhr.open('POST', form.action, true);
+      xhr.setRequestHeader('Accept', 'text/html');
+      xhr.send(formData);
+    });
+  })();
+</script>
+{% endblock %}

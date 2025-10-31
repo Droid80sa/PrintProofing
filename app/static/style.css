@@ -1,0 +1,416 @@
+/* style.css */
+
+/* Fallback variables - important if branding isn't loaded */
+:root {
+  --primary-color: #333333;
+  --background-color: #f2f2f2;
+  --approve-color: #28a745; /* Default green */
+  --reject-color: #dc3545; /* Default red */
+  /* --button-color: #007bff; REMOVED: This is now handled by --general-btn-color from theme.css */
+  --text-color: #333333; /* A general text color variable */
+  --heading-color: #2c3e50; /* A color specifically for headings */
+  --border-color: #ddd; /* Consistent border color */
+  --light-gray: #f9f9f9; /* For table headers, etc. */
+  --medium-gray: #ccc; /* For table borders */
+  --font-family: Arial, sans-serif; /* Ensure a consistent font family */
+}
+
+body {
+  font-family: var(--font-family); /* Use variable */
+  background: var(--background-color); /* Use variable */
+  color: var(--text-color); /* Use variable */
+  margin: 0;
+  padding: 0; /* Changed to 0 to allow container to handle main padding */
+}
+
+.container {
+  max-width: 900px;
+  margin: 2rem auto; /* Added top/bottom margin for the main container */
+  background: white;
+  border-radius: 8px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.05);
+  overflow: hidden; /* Ensures rounded corners apply to internal content */
+}
+
+.container-content { /* For pages where content is directly within base.html's container block */
+    padding: 2rem; /* Consistent padding for main content areas */
+}
+
+h1 {
+  color: var(--heading-color);
+  text-align: center;
+  margin-bottom: 1.5rem;
+  font-size: 2em; /* Consistent heading size */
+}
+
+/* --- Navigation Styles (if still desired, though base_no_nav removes it) --- */
+nav {
+  background: var(--primary-color);
+  padding: 1rem;
+  margin-bottom: 1rem;
+  text-align: center;
+}
+
+nav a {
+  color: white;
+  margin: 0 1rem;
+  text-decoration: none;
+  font-weight: bold;
+  transition: color 0.3s ease;
+}
+
+nav a:hover {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+
+.flash-messages {
+  margin: 1.5rem 0;
+}
+
+.flash-message {
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  margin-bottom: 0.75rem;
+  border: 1px solid transparent;
+}
+
+/* --- Form Specific Styles (already good, but ensure consistency) --- */
+.form-container {
+    max-width: 600px;
+    margin: 40px auto;
+    padding: 30px;
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    font-family: var(--font-family);
+    color: var(--text-color);
+}
+
+.modern-form .form-group {
+    margin-bottom: 20px;
+}
+
+.modern-form label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: var(--heading-color); /* Use a darker color for labels */
+}
+
+.modern-form input[type="text"],
+.modern-form textarea,
+.modern-form input[type="color"],
+.modern-form input[type="file"] {
+    width: 100%;
+    padding: 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    box-sizing: border-box;
+    font-size: 1em;
+    line-height: 1.5;
+}
+
+/* Specific styling for color input to prevent stretching */
+.modern-form input[type="color"] {
+    width: 60px;   /* Fixed width */
+    height: 40px;  /* Fixed height */
+    padding: 2px; /* Reduce padding for smaller inputs */
+    box-sizing: content-box; /* Ensures padding doesn't affect the visible color area */
+}
+
+
+.modern-form textarea {
+    resize: vertical;
+}
+
+.modern-form input[type="text"]:focus,
+.modern-form textarea:focus,
+.modern-form input[type="color"]:focus,
+.modern-form input[type="file"]:focus {
+    border-color: var(--primary-color);
+    outline: none;
+    box-shadow: 0 0 0 3px color-mix(in srgb, var(--primary-color) 25%, transparent); /* More modern approach if supported */
+}
+
+.help-text {
+    font-size: 0.85em;
+    color: #777;
+    margin-top: 5px;
+    display: block;
+}
+
+/* --- General Button Styles --- */
+button, .button {
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background-color 0.3s ease, transform 0.1s ease;
+  color: white; /* Default button text color, this will be overridden by theme.css if applicable */
+  /* background-color should now come from theme.css */
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+button:hover, .button:hover {
+  filter: brightness(110%);
+}
+
+button:active, .button:active {
+    transform: translateY(1px);
+}
+
+/* Specific button styles using variables from theme.css will override this if more specific */
+.submit-button {
+  width: 100%; /* Default for submit buttons */
+  padding: 15px;
+  font-weight: bold;
+  margin-top: 20px;
+}
+
+.inline-form {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-right: 0.5rem;
+}
+
+.inline-form select,
+.inline-form input[type="password"] {
+  padding: 0.4rem;
+  border: 1px solid var(--border-color);
+  border-radius: 4px;
+}
+
+.button.reject {
+  background-color: var(--reject-color, #dc3545);
+}
+
+.submit-button .emoji {
+  margin-right: 8px;
+}
+
+.approve-button {
+  /* No specific background-color or color here, as theme.css defines these */
+}
+
+.reject-button {
+  /* No specific background-color or color here, as theme.css defines these */
+}
+
+.download-button {
+    /* No specific background-color or color here, as theme.css defines these */
+    margin-bottom: 1.5rem;
+}
+
+.secondary-button { /* For buttons like "Cancel" in modals */
+    background-color: #6c757d; /* Keep specific fallback for secondary if not handled by theme.css */
+    color: white;
+}
+.secondary-button:hover {
+    background-color: #5a6268;
+}
+
+
+/* --- Admin Home Page List Styles --- */
+.admin-links {
+    list-style: none;
+    padding: 0;
+    margin-top: 2rem;
+}
+
+.admin-links li {
+    margin-bottom: 1rem;
+}
+
+.admin-links a {
+    display: block;
+    padding: 1rem 1.5rem;
+    background-color: #f5f5f5;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    color: var(--primary-color);
+    text-decoration: none;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.1s ease;
+}
+
+.admin-links a:hover {
+    background-color: var(--light-gray);
+    transform: translateX(5px);
+}
+
+/* --- Thanks Page Styles --- */
+.text-center {
+    text-align: center;
+}
+
+.status-message {
+    font-size: 1.2em;
+    font-weight: bold;
+    padding: 15px;
+    border-radius: 8px;
+    margin-top: 20px;
+    display: inline-block;
+}
+
+.approved-message {
+    background-color: #e6ffe6; /* Light green */
+    color: green;
+    border: 1px solid green;
+}
+
+.declined-message {
+    background-color: #ffe6e6; /* Light red */
+    color: red;
+    border: 1px solid red;
+}
+
+/* --- Dashboard Table Styles --- */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.data-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1.5rem;
+  background-color: white;
+  border: 1px solid var(--medium-gray);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.data-table th,
+.data-table td {
+  padding: 0.75rem 1rem;
+  border-bottom: 1px solid var(--medium-gray);
+  text-align: left;
+}
+
+.data-table th {
+  background-color: var(--light-gray);
+  font-weight: bold;
+  color: var(--heading-color);
+}
+
+.data-table tbody tr:last-child td {
+  border-bottom: none;
+}
+
+.data-table tbody tr:nth-child(even) {
+  background-color: #fefefe;
+}
+
+.data-table tbody tr:hover {
+  background-color: #f0f0f0;
+}
+
+/* Status colors for dashboard and status check */
+.status-approved { color: var(--approve-color); font-weight: bold; }
+.status-declined { color: var(--reject-color); font-weight: bold; }
+.status-pending { color: #888; font-weight: bold; }
+
+/* --- New Styles for Proof.html --- */
+.proof-media {
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+    text-align: center; /* Center the media if it's an image */
+}
+
+.proof-iframe {
+    width: 100%;
+    height: 600px;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+}
+
+.proof-image {
+    max-width: 100%;
+    height: auto;
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    display: block; /* Ensures it respects max-width and margin auto for centering */
+    margin: 0 auto;
+}
+
+.warning-message, .info-message {
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin-top: 15px;
+    text-align: center;
+    font-weight: bold;
+}
+
+.warning-message {
+    background-color: #fff3cd; /* Light yellow */
+    color: #856404; /* Dark yellow */
+    border: 1px solid #ffeeba;
+}
+
+.info-message {
+    background-color: #e2e6ea; /* Light gray */
+    color: #383d41; /* Dark gray */
+    border: 1px solid #dae0e5;
+}
+
+
+/* --- Modal Styles (for Disclaimer Modal) --- */
+.modal-overlay {
+    display: flex;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000; /* Ensure it's on top */
+}
+
+.modal-content {
+    background: white;
+    padding: 2rem;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    position: relative; /* For potential close button positioning */
+}
+
+.modal-content h2 {
+    text-align: center;
+    margin-top: 0;
+    color: var(--heading-color);
+}
+
+.modal-buttons {
+    display: flex;
+    justify-content: space-between; /* Space out the buttons */
+    margin-top: 1.5rem;
+    gap: 1rem; /* Space between buttons */
+}
+
+.modal-buttons .submit-button,
+.modal-buttons .button {
+    width: 100%; /* Make buttons take full width within their flex item */
+    margin-top: 0; /* Override default button margin-top */
+}
+
+/* Specific logo styling for status_check.html */
+.logo-display {
+    text-align: center; /* Center the logo within its div */
+    margin-bottom: 20px;
+}
+
+.logo-display img {
+    max-height: 80px; /* Max height for the logo */
+    width: auto;      /* Maintain aspect ratio */
+    max-width: 100%;  /* IMPORTANT: Ensure it doesn't exceed its container's width */
+    display: block;   /* Helps with centering if parent is text-align: center */
+    margin: 0 auto;   /* Center the image horizontally */
+}

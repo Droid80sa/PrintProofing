@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Edit Customer – {{ branding.company_name }}{% endblock %}
+{% block content %}
+<div class="form-container">
+  <h1>Edit Customer</h1>
+  <form method="post" action="{{ url_for('designer_customer_edit', customer_id=customer.id) }}" class="modern-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group">
+      <label for="name">Customer Name</label>
+      <input type="text" id="name" name="name" value="{{ customer.name }}" required>
+    </div>
+    <div class="form-group">
+      <label for="company_name">Company Name</label>
+      <input type="text" id="company_name" name="company_name" value="{{ customer.company_name }}">
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" value="{{ customer.email }}" required>
+    </div>
+    <div class="form-actions">
+      <button type="submit" class="button">Save Changes</button>
+      <a href="{{ url_for('designer_customers') }}" class="button">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

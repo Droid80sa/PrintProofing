@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Edit User – {{ user.email }}{% endblock %}
+{% block content %}
+<div class="form-container">
+  <h1>Edit User</h1>
+  <form method="post" class="modern-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group">
+      <label for="name">Name</label>
+      <input type="text" id="name" name="name" value="{{ user.name }}" required>
+    </div>
+    <div class="form-group">
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" value="{{ user.email }}" required>
+    </div>
+    <div class="form-group">
+      <label for="role">Role</label>
+      <select id="role" name="role">
+        <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+        <option value="designer" {% if user.role == 'designer' %}selected{% endif %}>Designer</option>
+      </select>
+    </div>
+    <div class="form-group">
+      <label for="reply_to">Designer reply-to email</label>
+      <input type="email" id="reply_to" name="designer_reply_to"
+             value="{{ user.designer_profile.reply_to_email if user.designer_profile else '' }}"
+             placeholder="Overrides email when client replies">
+      <small class="help-text">Applies when the user is a designer.</small>
+    </div>
+    <fieldset>
+      <legend>SMTP Settings</legend>
+      {% set smtp_configured = user.smtp_host and user.smtp_port %}
+      {% if not smtp_configured %}
+        <div class="flash-message warning">
+          Configure SMTP host and port to enable per-user delivery.
+        </div>
+      {% elif user.smtp_last_test_status == 'failed' %}
+        <div class="flash-message error">
+          Last test failed{% if user.smtp_last_test_at %} on {{ user.smtp_last_test_at.strftime('%Y-%m-%d %H:%M UTC') }}{% endif %}.
+          {% if user.smtp_last_error %}<br><small>{{ user.smtp_last_error }}</small>{% endif %}
+        </div>
+      {% elif user.smtp_last_test_status == 'success' %}
+        <div class="flash-message success">
+          Last test succeeded{% if user.smtp_last_test_at %} on {{ user.smtp_last_test_at.strftime('%Y-%m-%d %H:%M UTC') }}{% endif %}.
+        </div>
+      {% else %}
+        <div class="flash-message info">
+          SMTP test has not been run yet for this user.
+        </div>
+      {% endif %}
+      <div class="form-group">
+        <label for="smtp_host">SMTP Host</label>
+        <input type="text" id="smtp_host" name="smtp_host" value="{{ user.smtp_host or '' }}">
+      </div>
+      <div class="form-group">
+        <label for="smtp_port">SMTP Port</label>
+        <input type="number" id="smtp_port" name="smtp_port" value="{{ user.smtp_port or '' }}" min="1">
+      </div>
+      <div class="form-group">
+        <label for="smtp_username">SMTP Username</label>
+        <input type="text" id="smtp_username" name="smtp_username" value="{{ user.smtp_username or '' }}">
+      </div>
+      <div class="form-group">
+        <label for="smtp_password">SMTP Password</label>
+        <input type="password" id="smtp_password" name="smtp_password" value="{{ user.smtp_password or '' }}">
+      </div>
+      <div class="form-group">
+        <label><input type="checkbox" name="smtp_use_tls" value="1" {% if user.smtp_use_tls %}checked{% endif %}> Use STARTTLS</label>
+        <label style="margin-left:1rem;"><input type="checkbox" name="smtp_use_ssl" value="1" {% if user.smtp_use_ssl %}checked{% endif %}> Use SSL</label>
+      </div>
+      <div class="form-group">
+        <label for="smtp_sender">SMTP Sender Address</label>
+        <input type="email" id="smtp_sender" name="smtp_sender" value="{{ user.smtp_sender or user.email }}">
+      </div>
+      <div class="form-group">
+        <label for="smtp_reply_to">SMTP Reply-To Address</label>
+        <input type="email" id="smtp_reply_to" name="smtp_reply_to" value="{{ user.smtp_reply_to or '' }}">
+      </div>
+    </fieldset>
+    <button type="submit" class="submit-button">💾 Save Changes</button>
+  </form>
+
+  <hr>
+
+  <form method="post" action="{{ url_for('admin.admin_user_smtp_test', user_id=user.id) }}" class="modern-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group">
+      <label for="test_email">Send SMTP test email to</label>
+      <input type="email" id="test_email" name="test_email" value="{{ user.email }}" required>
+    </div>
+    <button type="submit" class="button">✉️ Send Test Email</button>
+  </form>
+</div>
+{% endblock %}

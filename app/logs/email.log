@@ -1,0 +1,334 @@
+2025-10-29 12:58:30,701 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/app/app/utils.py", line 112, in _send_email_sync
+    with current_app.app_context():
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-29 15:38:22,521 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 124, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-29 15:38:41,938 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 124, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-29 15:53:32,407 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 124, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-29 15:54:05,777 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 124, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-29 15:54:49,717 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 124, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-29 15:56:16,430 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 124, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-29 15:56:50,173 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 124, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-30 06:28:14,679 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 127, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-30 06:40:35,000 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 127, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-30 06:41:44,145 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 127, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-30 06:43:22,784 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 127, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-30 07:58:04,057 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 127, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-30 07:59:03,522 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 127, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-30 07:59:59,395 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/app/utils.py", line 127, in _send_email_sync
+    with current_app.app_context():
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+  File "/Volumes/DATA/projects that are in a working state/proofs-app/venv/lib/python3.9/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-30 07:30:37,138 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/app/app/customer_notifications.py", line 83, in _deliver_notification
+    with current_app.app_context():
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-30 07:33:39,274 ERROR Email task failed: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+Traceback (most recent call last):
+  File "/app/app/email_queue.py", line 26, in _worker
+    func(*args, **kwargs)
+  File "/app/app/customer_notifications.py", line 83, in _deliver_notification
+    with current_app.app_context():
+         ^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/local.py", line 318, in __get__
+    obj = instance._get_current_object()
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "/usr/local/lib/python3.11/site-packages/werkzeug/local.py", line 519, in _get_current_object
+    raise RuntimeError(unbound_message) from None
+RuntimeError: Working outside of application context.
+
+This typically means that you attempted to use functionality that needed
+the current application. To solve this, set up an application context
+with app.app_context(). See the documentation for more information.
+2025-10-30 09:37:00,431 INFO Email task succeeded: {'to': 'proofs@hotink.co.za', 'subject': 'Hot Ink: Client has APPROVED job Brand Guide'}
+2025-10-30 07:40:16,883 INFO Email task succeeded: {'notification_id': '6087120b-223d-430d-a268-d62e0076a8c3', 'proof_id': '076f3031-684c-4159-9ee1-ef63999ce64a', 'customer_email': 'andrew@hotink.co.za', 'subject': 'New proof ready: Testco'}
+2025-10-30 11:53:35,429 INFO Email task succeeded: {'to': 'andrew@hotink.co.za', 'subject': 'Hot Ink: Finish setting up your account'}
+2025-10-30 11:54:06,997 INFO Email task succeeded: {'notification_id': '91948f8e-8c31-486e-958c-4e00473321f6', 'proof_id': 'c7d6def6-7eee-4a65-bb99-304eba6c2b8e', 'customer_email': 'andrew@hotink.co.za', 'subject': 'New proof ready: gdfgdfg'}
+2025-10-30 12:03:31,913 INFO Email task succeeded: {'notification_id': '47941e01-90a4-44ee-8e34-786d122f2a89', 'proof_id': '7b3111a3-5f4b-44dc-85d9-41b41f007355', 'customer_email': 'andrew@hotink.co.za', 'subject': 'New proof ready: fghfghfgh'}

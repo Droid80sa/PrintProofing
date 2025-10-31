@@ -1,0 +1,288 @@
+{% extends "base.html" %} {# Assumes base.html is used for admin pages and includes the nav bar #}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+<style>
+  /* Admin-specific logo styling */
+  .admin-logo-display {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 30px;
+  }
+
+  .admin-logo-display img {
+      max-width: 180px; /* Adjust as needed for admin dashboard */
+      height: auto;
+      border-radius: 8px; /* Rounded corners for the logo */
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
+  }
+
+  .dashboard-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+      align-items: center;
+  }
+
+  .dashboard-controls input[type="search"],
+  .dashboard-controls select {
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color, #ddd);
+      min-width: 200px;
+      font-size: 0.95rem;
+  }
+
+  .insight-cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+  }
+
+  .insight-card {
+      flex: 1 1 180px;
+      background: #fff;
+      border-radius: 10px;
+      padding: 1rem 1.2rem;
+      box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+      text-align: center;
+  }
+
+  .insight-card h3 {
+      margin: 0;
+      font-size: 0.9rem;
+      color: #666;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+  }
+
+  .insight-card p {
+      margin: 0.35rem 0 0;
+      font-size: 1.8rem;
+      font-weight: 700;
+      color: var(--primary-color);
+  }
+
+  /* Status text colors for dashboard */
+  .status-Approved {
+    color: #28a745; /* Green, matching approve button */
+    font-weight: bold;
+  }
+
+  .status-Declined {
+    color: #dc3545; /* Red, matching reject button */
+    font-weight: bold;
+  }
+
+  .status-Pending {
+    color: #6c757d; /* Grey */
+    font-weight: bold;
+  }
+
+  /* General table styling for readability */
+  .dashboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+      background-color: white;
+  }
+
+  .dashboard-table th, .dashboard-table td {
+      border: 1px solid #dee2e6;
+      padding: 12px 15px;
+      text-align: left;
+  }
+
+  .dashboard-table th {
+      background-color: var(--primary-color);
+      color: white;
+      font-weight: bold;
+      text-transform: uppercase;
+      font-size: 0.9em;
+  }
+
+  .dashboard-table tbody tr:nth-child(even) {
+      background-color: #f8f9fa;
+  }
+
+  .dashboard-table tbody tr:hover {
+      background-color: #e2e6ea;
+  }
+
+  /* Link styling within table */
+  .dashboard-table a {
+      text-decoration: none;
+      color: var(--primary-color);
+      font-weight: bold;
+  }
+  /* Override link color for button links */
+  .dashboard-table a.button {
+      color: white;
+  }
+
+  /* Container to limit table height */
+  .dashboard-table-container {
+      max-height: 350px; /* roughly six rows */
+      overflow-y: auto;
+  }
+
+  .dashboard-table a:hover {
+      text-decoration: underline;
+  }
+
+  /* Responsive table */
+  @media (max-width: 768px) {
+    .dashboard-table, .dashboard-table tbody, .dashboard-table tr, .dashboard-table td {
+        display: block;
+        width: 100%;
+    }
+    .dashboard-table thead {
+        display: none; /* Hide table headers on small screens */
+    }
+    .dashboard-table tr {
+        margin-bottom: 15px;
+        border: 1px solid #dee2e6;
+        border-radius: 8px;
+        overflow: hidden;
+    }
+    .dashboard-table td {
+        text-align: right;
+        padding-left: 50%;
+        position: relative;
+        border: none;
+    }
+    .dashboard-table td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: calc(50% - 30px);
+        padding-right: 10px;
+        white-space: nowrap;
+        text-align: left;
+        font-weight: bold;
+        color: #495057;
+    }
+  }
+</style>
+
+<div class="container-content">
+  {% if branding.logo_url %}
+  <div class="admin-logo-display">
+    <img src="{{ branding.logo_url }}" alt="{{ branding.company_name }} Logo">
+  </div>
+  {% endif %}
+
+  <h1>Admin Dashboard</h1>
+
+  <div class="insight-cards">
+    <div class="insight-card">
+      <h3>Total Proofs</h3>
+      <p>{{ counts.total }}</p>
+    </div>
+    <div class="insight-card">
+      <h3>Awaiting Approval</h3>
+      <p>{{ counts.pending }}</p>
+    </div>
+    <div class="insight-card">
+      <h3>Approved</h3>
+      <p>{{ counts.approved }}</p>
+    </div>
+    <div class="insight-card">
+      <h3>Declined</h3>
+      <p>{{ counts.declined }}</p>
+    </div>
+  </div>
+
+  <div class="dashboard-controls">
+    <input type="search" id="dashboardSearch" placeholder="Search by job, designer, email...">
+    <select id="dashboardStatusFilter">
+      <option value="all" selected>All statuses</option>
+      <option value="approved">Approved</option>
+      <option value="pending">Pending</option>
+      <option value="declined">Declined</option>
+    </select>
+  </div>
+
+  <div class="dashboard-table-container">
+  <table class="dashboard-table">
+    <thead>
+      <tr>
+        <th>Job ID</th>
+        <th>Job Name</th>
+        <th>Designer</th>
+        <th>Last Updated</th>
+        <th>Status</th>
+        <th>Last Action</th>
+        <th>Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for job in jobs %}
+      <tr data-status="{{ job.status|lower }}" data-designer="{{ job.designer|lower }}" data-email="{{ job.designer_email|lower }}" data-job="{{ job.job_name|lower }}">
+        <td data-label="Job ID">{{ job.job_id }}</td>
+        <td data-label="Job Name">
+          <strong>{{ job.job_name }}</strong><br>
+          <small>{{ job.latest_file_name }}</small>
+        </td>
+        <td data-label="Designer">{{ job.designer }}<br><small>{{ job.designer_email }}</small></td>
+        <td data-label="Last Updated">
+          {{ job.updated_at_display }}
+          {% if job.created_at_display %}
+            <br><small>Created: {{ job.created_at_display }}</small>
+          {% endif %}
+        </td>
+        <td data-label="Status">
+          <span class="status-{{ job.status }}"> {# Applies status-Approved, status-Declined, or status-Pending class #}
+            {{ job.status }}
+          </span>
+        </td>
+        <td data-label="Last Action">
+          {{ job.approver_name if job.approver_name else '—' }}
+          {% if job.decision_timestamp_display %}
+            <br><small>{{ job.decision_timestamp_display }}</small>
+          {% endif %}
+          {% if job.client_comment %}
+            <br><small>“{{ job.client_comment }}”</small>
+          {% endif %}
+        </td>
+        <td data-label="Action"><a href="{{ job.link }}" class="button primary-button">View Proof</a> <a href="{{ url_for('new_version', job_id=job.job_id) }}" class="button">New Version</a></td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+  </div>
+
+  <div style="margin-top: 30px; text-align: center;">
+    <a href="{{ url_for('admin.export_csv') }}" class="button approve-button">Download CSV Export</a>
+  </div>
+</div>
+
+<script>
+  (function() {
+    const searchInput = document.getElementById('dashboardSearch');
+    const statusFilter = document.getElementById('dashboardStatusFilter');
+    const rows = Array.from(document.querySelectorAll('.dashboard-table tbody tr'));
+
+    function applyFilters() {
+      const query = (searchInput.value || '').toLowerCase();
+      const status = statusFilter.value;
+
+      rows.forEach((row) => {
+        const matchesStatus = status === 'all' || row.dataset.status === status;
+        const haystack = [
+          row.dataset.job,
+          row.dataset.designer,
+          row.dataset.email
+        ].join(' ');
+        const matchesSearch = !query || haystack.includes(query);
+        row.style.display = matchesStatus && matchesSearch ? '' : 'none';
+      });
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+    statusFilter.addEventListener('change', applyFilters);
+  })();
+</script>
+{% endblock %}

@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Thank You – {{ branding.company_name }}</title>
+  <!-- Core styles -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <!-- Dynamic theme CSS -->
+  <link rel="stylesheet" href="{{ url_for('theme_css') }}">
+  <style>
+    body {
+      background: var(--background-color);
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 2rem;
+    }
+    .thank-container {
+      max-width: 600px;
+      margin: 5rem auto;
+      text-align: center;
+    }
+    .status-message {
+      margin-top: 1rem;
+      font-size: 1.25rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="thank-container">
+    <h1>Thank you{{ approver_name and ', ' ~ approver_name }}!</h1>
+    <p>Your response has been recorded and sent to <strong>{{ designer }}</strong>.</p>
+    <p>You can close this window now.</p>
+    {% if decision == "approved" %}
+      <p class="status-message approved-message">✅ You approved the proof.</p>
+    {% else %}
+      <p class="status-message declined-message">❌ You declined the proof.</p>
+    {% endif %}
+  </div>
+</body>
+</html>

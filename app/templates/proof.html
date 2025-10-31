@@ -1,0 +1,359 @@
+{% extends "base_no_nav.html" %} {# Reverted to base_no_nav.html to hide navigation #}
+{% block title %}{{ job_name }} – Proof Approval{% endblock %}
+{% block content %}
+<style>
+  /* Local styles for proof.html buttons and status text */
+  .proof-button {
+    padding: 1rem 2rem;
+    margin-right: 1rem; /* Adjust as needed */
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: inline-flex; /* Use flex to align icon and text */
+    align-items: center; /* Vertically center icon and text */
+    justify-content: center; /* Horizontally center content within button */
+
+    /* Default text color for generic proof buttons (like Cancel) */
+    color: black;
+    background-color: lightgray; /* A neutral fallback */
+    transition: background-color 0.3s ease, transform 0.1s ease;
+  }
+
+  .proof-button:hover {
+    filter: brightness(110%);
+  }
+
+  .proof-button:active {
+    transform: translateY(1px);
+  }
+
+  /* Specific colors for Approve buttons, overriding any variables */
+  .proof-approve-button {
+    background-color: #4CAF50; /* Green */
+    color: white;
+  }
+
+  /* Specific colors for Reject/Decline buttons, overriding any variables */
+  .proof-reject-button {
+    background-color: #f44336; /* Red */
+    color: white;
+  }
+
+  /* Style for the emoji icons inside the buttons */
+  .emoji-icon {
+    margin-right: 8px; /* Space between icon and text */
+    font-size: 1.2rem; /* Make icon slightly larger than text if desired */
+    line-height: 1; /* Prevent extra spacing around emoji */
+  }
+
+  .proof-modal-button-container {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 1.5rem;
+      gap: 1rem;
+  }
+
+  .proof-modal-button-container button {
+      width: 100%;
+      margin-top: 0;
+  }
+
+  /* Ensure the disclaimer modal is hidden by default via CSS */
+  #disclaimerModal {
+      display: none; /* Hide by default */
+  }
+
+  /* Status text colors */
+  .status-approved {
+    color: green;
+  }
+
+  .status-declined {
+    color: red;
+  }
+
+  /* Styles for proof media */
+  .proof-media {
+      margin-top: 20px;
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      padding: 10px;
+      background-color: #f9f9f9;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      width: 100%; /* Ensure it takes full width */
+      max-width: 800px; /* Max width for readability */
+      margin-left: auto;
+      margin-right: auto;
+      box-sizing: border-box; /* Include padding and border in the element's total width and height */
+  }
+
+  .proof-iframe, .proof-image {
+      width: 100%;
+      height: auto; /* Allow height to adjust */
+      max-width: 100%;
+      display: block;
+  }
+
+  .proof-iframe {
+      min-height: 600px; /* Minimum height for PDF viewer */
+      border: none;
+  }
+
+  .warning-message {
+    color: orange;
+    font-weight: bold;
+    text-align: center;
+    padding: 20px;
+  }
+
+  .back-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      margin-bottom: 1.5rem;
+      color: #333;
+      text-decoration: none;
+      font-weight: 600;
+  }
+
+  .back-link:hover {
+      text-decoration: underline;
+  }
+
+  /* Logo display on client-facing pages */
+  .client-logo-display {
+      text-align: center;
+      margin-top: 20px;
+      margin-bottom: 30px;
+  }
+
+  .client-logo-display img {
+      max-width: 200px; /* Adjust as needed */
+      height: auto;
+      border-radius: 8px; /* Rounded corners for the logo */
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1); /* Subtle shadow */
+  }
+
+  /* Style for the approver name highlight */
+  .approver-name-highlight {
+      color: var(--primary-color, #007bff); /* Use primary color from branding, fallback to blue */
+      font-weight: bold;
+  }
+
+  /* Responsive adjustments */
+  @media (max-width: 768px) {
+      .proof-media {
+          padding: 5px;
+      }
+      .proof-iframe {
+          min-height: 400px;
+      }
+      .client-logo-display img {
+          max-width: 150px; /* Smaller logo on mobile */
+      }
+  }
+</style>
+
+<div class="container-content"> {# Use container-content for consistent padding within the main container #}
+  <a href="javascript:void(0);" class="back-link" onclick="window.history.back()">
+    <span aria-hidden="true">←</span>
+    <span>Back</span>
+  </a>
+
+  {% if branding.logo_url %}
+  <div class="client-logo-display"> {# New class for client-facing logo #}
+    <img src="{{ branding.logo_url }}" alt="{{ branding.company_name }} Logo">
+  </div>
+  {% endif %}
+
+  <h1>Job: {{ job_name }}</h1>
+
+  {% if customer_portal_banner %}
+    <div class="info-message">
+      <strong>New:</strong> A secure customer portal is now available. For protected access, please
+      <a href="{{ customer_login_url }}">sign in before reviewing proofs</a>.
+    </div>
+  {% endif %}
+
+  {% if status != "pending" %}
+    <p class="status-message">
+      This proof has been <strong class="status-{{ status }}">{{ status.upper() }}</strong>
+      {% if approver_name %} <span class="approver-name-highlight">by {{ approver_name }}</span>{% endif %}. {# Added span and approver_name variable #}
+    </p>
+  {% endif %}
+
+  <p><strong>Your designer:</strong> {{ designer }}</p>
+  {% if version_options|length > 1 %}
+    <div class="form-group">
+      <label for="version-select">Version:</label>
+      <select id="version-select" onchange="switchVersion()">
+        {% for option in version_options %}
+          <option value="{{ option.id }}" data-file-url="{{ option.file_url }}" data-file-ext="{{ option.file_ext }}" {% if option.id == latest_version_id %}selected{% endif %}>
+            Version {{ loop.index }}{% if option.created_at %} ({{ option.created_at.strftime('%Y-%m-%d %H:%M') }}){% endif %}
+          </option>
+        {% endfor %}
+      </select>
+      <a href="{{ url_for('compare_versions', job_id=job_id) }}" class="button">Compare Versions</a>
+      <a href="{{ url_for('annotate_proof', job_id=job_id) }}" class="button">Add Annotations</a>
+    </div>
+  {% endif %}
+  {% if notes %}
+    <p><strong>Job notes:</strong><br>{{ notes }}</p>
+  {% endif %}
+
+  <div class="proof-media"> {# New wrapper for media content #}
+    {% if proof_file_url %}
+      {% if proof_file_extension in ['.pdf'] %}
+        <iframe src="{{ proof_file_url }}" class="proof-iframe"></iframe>
+      {% elif proof_file_extension in ['.jpg', '.jpeg', '.png'] %}
+        <img src="{{ proof_file_url }}" alt="Proof Image" class="proof-image">
+      {% else %}
+        <p class="warning-message"><strong>Preview not available for this file type.</strong></p>
+        <p><a href="{{ proof_file_url }}" class="button">Download proof</a></p>
+      {% endif %}
+    {% else %}
+      <p class="warning-message"><strong>Proof file is not available.</strong></p>
+    {% endif %}
+  </div>
+
+  {% if status == "pending" %}
+  <form id="decisionForm" action="/submit" method="post" class="modern-form"> {# Apply modern-form class #}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <input type="hidden" name="job_id" value="{{ job_id }}">
+    <input type="hidden" name="decision" id="decisionInput" value="">
+    <input type="hidden" name="approver_name" id="approverName" value="">
+
+    <div id="declineFields" style="display:none;">
+      <div class="form-group"> {# Wrap in form-group #}
+        <label for="declineName"><strong>Your name:</strong></label>
+        <input type="text" id="declineName" name="decline_name" placeholder="Enter your name">
+      </div>
+      <div class="form-group"> {# Wrap in form-group #}
+        <label for="client_comment">Reason for declining:</label>
+        <textarea name="client_comment" rows="4" placeholder="Optional comment..."></textarea>
+      </div>
+      {# Use custom proof-button class #}
+      <button type="button" onclick="submitDecline()" class="proof-button proof-reject-button"><span class="emoji-icon">📩</span> Send Decline Response</button>
+    </div>
+
+    <div class="buttons" id="initialButtons">
+      {# Use custom proof-button classes with emoji-icon span #}
+      <button type="button" class="proof-button proof-approve-button" onclick="showDisclaimer()"><span class="emoji-icon">✅</span> Approve</button>
+      <button type="button" class="proof-button proof-reject-button" onclick="showDecline()"><span class="emoji-icon">❌</span> Reject</button>
+    </div>
+  </form>
+  {% else %}
+    <p class="info-message"><em>No further action is required.</em></p> {# Apply new class #}
+  {% endif %}
+</div>
+
+<div id="disclaimerModal" class="modal-overlay"> {# No inline style here, handled by <style> block #}
+  <div class="modal-content"> {# Apply modal-content class #}
+    <h2>Approval Disclaimer</h2>
+    <p>{{ disclaimer | safe }}</p>
+    <div class="form-group"> {# Wrap in form-group #}
+      <label for="clientName"><strong>Your name:</strong></label>
+      <input type="text" id="clientName" placeholder="Enter your name">
+    </div>
+    <div class="proof-modal-button-container"> {# New class for modal buttons #}
+      {# Use custom proof-button classes with emoji-icon span #}
+      <button onclick="submitDecision()" class="proof-button proof-approve-button"><span class="emoji-icon">✅</span> Accept and Approve</button>
+      <button onclick="closeDisclaimer()" class="proof-button"><span class="emoji-icon">↩️</span> Cancel</button>
+</div>
+</div>
+</div>
+
+<div id="loadingOverlay" class="modal-overlay" style="display:none;">
+  <div class="modal-content">
+    <p>Please wait while your response is processed...</p>
+  </div>
+</div>
+<script>
+// Your existing JavaScript functions remain here
+function showDecline() {
+  document.getElementById('decisionInput').value = 'declined';
+  document.getElementById('declineFields').style.display = 'block';
+  document.getElementById('initialButtons').style.display = 'none';
+}
+function showDisclaimer() {
+  document.getElementById('decisionInput').value = 'approved';
+  document.getElementById('disclaimerModal').style.display = 'flex';
+}
+function closeDisclaimer() {
+  document.getElementById('disclaimerModal').style.display = 'none';
+}
+function showLoading() {
+  document.getElementById('loadingOverlay').style.display = 'flex';
+}
+function submitDecision() {
+  const name = document.getElementById('clientName').value.trim();
+  if (!name) {
+    alert("Please enter your name.");
+    return;
+  }
+  document.getElementById('approverName').value = name;
+  document.getElementById('disclaimerModal').style.display = 'none';
+  showLoading();
+  document.getElementById('decisionForm').submit();
+}
+function submitDecline() {
+  const name = document.getElementById('declineName').value.trim();
+  if (!name) {
+    alert("Please enter your name before declining.");
+    return;
+  }
+  document.getElementById('approverName').value = name;
+  showLoading();
+  document.getElementById('decisionForm').submit();
+}
+
+const latestVersionId = "{{ latest_version_id }}";
+
+function switchVersion() {
+  const select = document.getElementById('version-select');
+  const selectedOption = select.options[select.selectedIndex];
+  const fileUrl = selectedOption.dataset.fileUrl;
+  const fileExt = selectedOption.dataset.fileExt;
+  const selectedVersionId = selectedOption.value;
+
+  const proofMediaDiv = document.querySelector('.proof-media');
+  proofMediaDiv.innerHTML = ''; // Clear current media
+
+  if (fileExt === '.pdf') {
+    proofMediaDiv.innerHTML = `<iframe src="${fileUrl}" class="proof-iframe"></iframe>`;
+  } else if (['.jpg', '.jpeg', '.png'].includes(fileExt)) {
+    proofMediaDiv.innerHTML = `<img src="${fileUrl}" alt="Proof Image" class="proof-image">`;
+  } else {
+    proofMediaDiv.innerHTML = `<p class="warning-message"><strong>Preview not available for this file type.</strong></p><p><a href="${fileUrl}" class="button">Download proof</a></p>`;
+  }
+
+  // Enable/disable decision form based on whether the latest version is selected
+  const decisionForm = document.getElementById('decisionForm');
+  const initialButtons = document.getElementById('initialButtons');
+  const declineFields = document.getElementById('declineFields');
+  const infoMessage = document.querySelector('.info-message');
+
+  if (selectedVersionId === latestVersionId) {
+    if (infoMessage) infoMessage.style.display = 'none';
+    if (decisionForm) decisionForm.style.display = 'block';
+    if (initialButtons) initialButtons.style.display = 'block';
+  } else {
+    if (infoMessage) infoMessage.style.display = 'block';
+    if (decisionForm) decisionForm.style.display = 'none';
+    if (initialButtons) initialButtons.style.display = 'none';
+    if (declineFields) declineFields.style.display = 'none';
+  }
+}
+
+// Initial call to set up the correct version display and form state on page load
+window.addEventListener('load', function() {
+  if (document.getElementById('version-select')) {
+    switchVersion();
+  }
+});
+</script>
+{% endblock %}

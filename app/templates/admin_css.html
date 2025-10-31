@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Edit Theme (style.css){% endblock %}
+{% block content %}
+<div class="form-container"> {# Wrap in form-container #}
+  <h1>Edit Theme (style.css)</h1>
+  <form method="post" class="modern-form"> {# Apply modern-form class #}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group"> {# Wrap textarea in form-group #}
+      <label for="css_content">CSS Content:</label> {# Added label #}
+      <textarea id="css_content" name="css" rows="25">{{ css }}</textarea> {# Set rows, removed inline height #}
+    </div>
+    <button type="submit" class="submit-button">💾 Save CSS</button> {# Apply submit-button class #}
+  </form>
+</div>
+{% endblock %}

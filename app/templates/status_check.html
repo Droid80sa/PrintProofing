@@ -1,0 +1,38 @@
+{% extends "base_no_nav.html" %}
+{% block title %}Check Proof Status – {{ branding.company_name }}{% endblock %}
+
+{% block content %}
+<div class="form-container">
+  <div class="logo-display">
+    <img src="{{ branding.logo_url }}" alt="Logo">
+  </div>
+
+  <h1>Check Proof Status</h1>
+
+  <form method="post" action="{{ url_for('check_status') }}" class="modern-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group">
+      <label for="proof_url">Enter your proof link or job ID:</label>
+      <input type="text"
+             id="proof_url"
+             name="proof_url"
+             placeholder="e.g., http://… or ABC-123"
+             required>
+      <small id="job-id-help" class="help-text">e.g., a link starting with http:// or a code like ABC-123.</small>
+    </div>
+
+    <button type="submit" class="submit-button">🔍 Check Status</button>
+  </form>
+
+  {% if status %}
+    <div class="status-result">
+      <p><strong>Status:</strong> <span class="status-{{ status|lower }}">{{ status }}</span></p>
+      {% if comment %}
+        <p><strong>Comment:</strong><br>{{ comment }}</p>
+      {% endif %}
+    </div>
+  {% elif error %}
+    <p class="error-message">{{ error }}</p>
+  {% endif %}
+</div>
+{% endblock %}

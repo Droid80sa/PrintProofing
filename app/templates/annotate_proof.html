@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Annotate Proof – {{ branding.company_name }}{% endblock %}
+{% block content %}
+<div class="container-content">
+    <h1>Annotate Proof: {{ proof.job_name }}</h1>
+    <p>This feature is coming soon! You will be able to add comments and annotations directly on the proof here.</p>
+    <p><a href="{{ url_for('show_proof', job_id=proof.share_id) }}" class="button">Back to Proof</a></p>
+</div>
+{% endblock %}

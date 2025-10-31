@@ -1,0 +1,12 @@
+<nav style="background: var(--primary-color); padding: 1rem; color: white;">
+  <strong>{{ branding.company_name }}</strong> | 
+  <a href="{{ url_for('admin.admin_home') }}" style="color:white;">Home</a> |
+  <a href="{{ url_for('admin.admin_dashboard') }}" style="color:white;">Dashboard</a> |
+  <a href="{{ url_for('admin.admin_users') }}" style="color:white;">Users</a> |
+  <a href="{{ url_for('admin.admin_customers') }}" style="color:white;">Customers</a> |
+  <a href="{{ url_for('admin.admin_disclaimer') }}" style="color:white;">Disclaimer</a> |
+  <a href="{{ url_for('admin.upload_logo') }}" style="color:white;">Logo</a> |
+  <a href="{{ url_for('admin.edit_css') }}" style="color:white;">CSS</a> |
+  <a href="{{ url_for('admin.admin_settings') }}" style="color:white;">Settings</a> |
+  <a href="{{ url_for('admin.export_csv') }}" style="color:white;">Export CSV</a>
+</nav>

@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Edit Customer – {{ branding.company_name }}{% endblock %}
+{% block content %}
+<div class="form-container">
+    <h1>Edit Customer</h1>
+    <div class="card" style="margin-bottom: 1.5rem;">
+        <h2>Customer Portal Access</h2>
+        <p><strong>{{ invite_status.label }}</strong></p>
+        {% if invite_status.detail %}
+            <p>{{ invite_status.detail }}</p>
+        {% endif %}
+        {% if portal_enabled %}
+            <form method="post" action="{{ url_for('admin.admin_customer_invite', customer_id=customer.id) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="redirect" value="{{ request.full_path }}">
+                <button type="submit" class="button" {% if invite_status.state == 'pending' %}disabled{% endif %}>Send Invite</button>
+            </form>
+        {% else %}
+            <p>Enable the customer login portal to send invites.</p>
+        {% endif %}
+    </div>
+    <form method="post" action="{{ url_for('admin.admin_customer_edit', customer_id=customer.id) }}">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="form-group">
+            <label for="name">Customer Name:</label>
+            <input type="text" id="name" name="name" value="{{ customer.name }}" required>
+        </div>
+        <div class="form-group">
+            <label for="company_name">Company Name:</label>
+            <input type="text" id="company_name" name="company_name" value="{{ customer.company_name }}">
+        </div>
+        <div class="form-group">
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" value="{{ customer.email }}" required>
+        </div>
+        <div class="form-actions">
+            <button type="submit" class="button">Save Changes</button>
+            <a href="{{ url_for('admin.admin_customers') }}" class="button">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

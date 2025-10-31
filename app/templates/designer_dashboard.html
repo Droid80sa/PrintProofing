@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block title %}My Proofs – {{ branding.company_name }}{% endblock %}
+{% block content %}
+<style>
+  .dashboard-controls {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 1rem 0 1.5rem;
+  }
+
+  .dashboard-controls input[type="search"],
+  .dashboard-controls select {
+      padding: 0.6rem 0.8rem;
+      border-radius: 6px;
+      border: 1px solid var(--border-color, #ddd);
+      min-width: 200px;
+      font-size: 0.95rem;
+  }
+
+  .dashboard-table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 1rem;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+      background-color: #fff;
+  }
+
+  .dashboard-table th,
+  .dashboard-table td {
+      border: 1px solid #dee2e6;
+      padding: 12px 14px;
+      text-align: left;
+  }
+
+  .dashboard-table th {
+      background-color: var(--primary-color);
+      color: #fff;
+      text-transform: uppercase;
+      font-size: 0.85rem;
+  }
+
+  .dashboard-table tbody tr:nth-child(even) {
+      background-color: #f9fafb;
+  }
+
+  .dashboard-table tbody tr:hover {
+      background-color: #eef3ff;
+  }
+
+  @media (max-width: 768px) {
+      .dashboard-table,
+      .dashboard-table thead,
+      .dashboard-table tbody,
+      .dashboard-table th,
+      .dashboard-table td,
+      .dashboard-table tr {
+          display: block;
+      }
+      .dashboard-table thead {
+          display: none;
+      }
+      .dashboard-table tr {
+          margin-bottom: 1rem;
+          border-radius: 8px;
+          overflow: hidden;
+      }
+      .dashboard-table td {
+          padding-left: 50%;
+          text-align: right;
+          position: relative;
+          border: none;
+      }
+      .dashboard-table td::before {
+          content: attr(data-label);
+          position: absolute;
+          left: 12px;
+          text-align: left;
+          font-weight: bold;
+      }
+  }
+</style>
+
+<div class="container-content">
+  <h1>My Proofs</h1>
+
+  {% if designer %}
+    <p>Signed in as: <strong>{{ designer.display_name }}</strong></p>
+  {% else %}
+    <div class="flash-message warning">
+      No designer profile is linked to this account yet.
+    </div>
+  {% endif %}
+
+  {% if smtp_status %}
+    <div class="flash-message {{ smtp_status.level }}">
+      {{ smtp_status.message }}
+    </div>
+  {% endif %}
+
+  {% if smtp_can_test %}
+    <form method="post" action="{{ url_for('designer_smtp_test') }}" class="modern-form" style="margin-bottom:1.5rem;">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+      <div class="form-group" style="display:flex; flex-wrap:wrap; gap:0.75rem; align-items:flex-end;">
+        <div style="flex:1 1 260px;">
+          <label for="designer-test-email">Send SMTP test email to</label>
+          <input type="email" id="designer-test-email" name="test_email" value="{{ current_user.email }}" required>
+        </div>
+        <button type="submit" class="button">✉️ Send Test Email</button>
+      </div>
+    </form>
+  {% endif %}
+
+  {% if proofs %}
+    <div class="dashboard-controls">
+      <input type="search" id="designerSearch" placeholder="Search proofs…">
+      <select id="designerStatusFilter">
+        <option value="all" selected>All statuses</option>
+        <option value="approved">Approved</option>
+        <option value="pending">Pending</option>
+        <option value="declined">Declined</option>
+      </select>
+    </div>
+
+    <table class="dashboard-table">
+      <thead>
+        <tr>
+          <th>Job Name</th>
+          <th>Status</th>
+          <th>Last Action</th>
+          <th>Link</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for proof in proofs %}
+        <tr data-status="{{ proof.status|lower }}" data-job="{{ proof.job_name|lower }}">
+          <td data-label="Job Name"><strong>{{ proof.job_name }}</strong></td>
+          <td data-label="Status"><span class="status-{{ proof.status }}">{{ proof.status }}</span></td>
+          <td data-label="Last Action">
+            {{ proof.decision_timestamp_display or proof.updated_at_display }}
+            {% if proof.approver_name %}
+              <br><small>By {{ proof.approver_name }}</small>
+            {% endif %}
+            {% if proof.client_comment %}
+              <br><small>“{{ proof.client_comment }}”</small>
+            {% endif %}
+          </td>
+          <td data-label="Link"><a href="{{ proof.link }}" class="button">Open</a> <a href="{{ url_for('new_version', job_id=proof.share_id) }}" class="button">New Version</a></td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No proofs assigned to you yet.</p>
+  {% endif %}
+</div>
+
+<script>
+  (function() {
+    const searchInput = document.getElementById('designerSearch');
+    const statusFilter = document.getElementById('designerStatusFilter');
+    const rows = Array.from(document.querySelectorAll('.dashboard-table tbody tr'));
+
+    if (!rows.length) {
+      return;
+    }
+
+    function applyFilters() {
+      const query = (searchInput.value || '').trim().toLowerCase();
+      const status = statusFilter.value;
+
+      rows.forEach((row) => {
+        const matchesStatus = status === 'all' || row.dataset.status === status;
+        const matchesSearch = !query || row.dataset.job.includes(query);
+        row.style.display = matchesStatus && matchesSearch ? '' : 'none';
+      });
+    }
+
+    searchInput.addEventListener('input', applyFilters);
+    statusFilter.addEventListener('change', applyFilters);
+  })();
+</script>
+{% endblock %}

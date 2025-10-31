@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% block title %}My Customers – {{ branding.company_name }}{% endblock %}
+{% block content %}
+<div class="container-content">
+  <h1>Customers</h1>
+
+  <form method="post" action="{{ url_for('designer_customers') }}" class="modern-form" style="margin-bottom:2rem;">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <input type="hidden" name="action" value="create">
+    <div class="form-group">
+      <label for="customer_name">Customer Name</label>
+      <input type="text" id="customer_name" name="name" required>
+    </div>
+    <div class="form-group">
+      <label for="customer_company">Company Name</label>
+      <input type="text" id="customer_company" name="company_name">
+    </div>
+    <div class="form-group">
+      <label for="customer_email">Email</label>
+      <input type="email" id="customer_email" name="email" required>
+    </div>
+    <button type="submit" class="button">➕ Add Customer</button>
+  </form>
+
+  {% if portal_enabled %}
+    <p>Invite customers without accounts so they can access the portal.</p>
+  {% else %}
+    <p>Customer login is currently disabled. Ask an admin to enable it before sending invites.</p>
+  {% endif %}
+
+  {% if customer_rows %}
+    <table class="dashboard-table">
+      <thead>
+        <tr>
+          <th>Customer Name</th>
+          <th>Company</th>
+          <th>Email</th>
+          <th>Invite Status</th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for row in customer_rows %}
+          {% set customer = row.customer %}
+          <tr>
+            <td data-label="Customer Name">{{ customer.name }}</td>
+            <td data-label="Company">{{ customer.company_name or '—' }}</td>
+            <td data-label="Email">{{ customer.email }}</td>
+            <td data-label="Invite Status">
+              <div>
+                <strong>{{ row.invite.label }}</strong>
+                {% if row.invite.detail %}
+                  <br><small>{{ row.invite.detail }}</small>
+                {% endif %}
+              </div>
+            </td>
+            <td data-label="Actions">
+              {% if portal_enabled %}
+              <form method="post" action="{{ url_for('designer_customer_invite', customer_id=customer.id) }}" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <button type="submit" class="button" {% if row.invite.state == 'pending' %}disabled{% endif %}>Send Invite</button>
+              </form>
+              {% endif %}
+              <a href="{{ url_for('designer_customer_edit', customer_id=customer.id) }}" class="button">Edit</a>
+              <form method="post" action="{{ url_for('designer_customers') }}" style="display:inline;">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                <input type="hidden" name="action" value="delete">
+                <input type="hidden" name="customer_id" value="{{ customer.id }}">
+                <button type="submit" class="button reject" onclick="return confirm('Delete {{ customer.name }}?');">Delete</button>
+              </form>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No customers captured yet.</p>
+  {% endif %}
+</div>
+{% endblock %}

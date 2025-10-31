@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+{% block title %}Admin Home – {{ branding.company_name }}{% endblock %}
+{% block content %}
+<h1>Admin Panel</h1>
+<ul>
+  <li><a href="{{ url_for('upload') }}">Upload New Proof</a></li>
+  <li><a href="{{ url_for('admin.admin_dashboard') }}">View Dashboard</a></li>
+  <li><a href="{{ url_for('admin.export_csv') }}">Download CSV</a></li>
+  <li><a href="{{ url_for('admin.admin_disclaimer') }}">Edit Disclaimer</a></li>
+  <li><a href="{{ url_for('admin.upload_logo') }}">Upload Logo</a></li>
+  <li><a href="{{ url_for('admin.edit_css') }}">Edit CSS</a></li>
+  <li><a href="{{ url_for('admin.admin_settings') }}">Branding Settings</a></li>
+</ul>
+{% endblock %}

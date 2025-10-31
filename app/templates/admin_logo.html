@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}Upload Logo – {{ branding.company_name }}{% endblock %} {# Added company name to title #}
+{% block content %}
+<div class="form-container"> {# Wrap in form-container #}
+  <h1>Upload Logo</h1>
+  {% if message %}<p class="info-message">{{ message }}</p>{% endif %} {# Apply info-message class #}
+  <form method="POST" enctype="multipart/form-data" class="modern-form"> {# Apply modern-form class #}
+    <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+    <div class="form-group"> {# Wrap input in form-group #}
+      <label for="logo_file">Select Logo:</label> {# Added label #}
+      <input type="file" id="logo_file" name="logo">
+    </div>
+    <button type="submit" class="submit-button">⬆️ Upload</button> {# Apply submit-button class #}
+  </form>
+  {% if logo_exists %}
+    <p>Current logo:</p>
+    <div class="logo-display"> {# Use logo-display class #}
+      <img src="/static/uploads/logo.png" alt="Logo"> {# Removed inline style #}
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

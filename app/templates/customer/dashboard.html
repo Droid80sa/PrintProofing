@@ -1,0 +1,49 @@
+{% extends "base_no_nav.html" %}
+{% block title %}My Proofs{% endblock %}
+{% block content %}
+  <h1>Hi {{ customer.name }}</h1>
+  <p>Here are the proofs shared with your organisation.</p>
+
+  {% with messages = get_flashed_messages(with_categories=true) %}
+    {% if messages %}
+      <div class="flash-messages">
+        {% for category, message in messages %}
+          <div class="flash-message {{ category }}">{{ message }}</div>
+        {% endfor %}
+      </div>
+    {% endif %}
+  {% endwith %}
+
+  {% if proofs %}
+    <table class="data-table" style="width:100%; border-collapse:collapse; margin-top:1.5rem;">
+      <thead>
+        <tr>
+          <th style="text-align:left; padding:0.5rem;">Job name</th>
+          <th style="text-align:left; padding:0.5rem;">Designer</th>
+          <th style="text-align:left; padding:0.5rem;">Status</th>
+          <th style="text-align:left; padding:0.5rem;">Updated</th>
+          <th style="text-align:left; padding:0.5rem;">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for proof in proofs %}
+          <tr style="border-top:1px solid #ddd;">
+            <td style="padding:0.5rem;">{{ proof.job_name }}</td>
+            <td style="padding:0.5rem;">{{ proof.designer.display_name if proof.designer else "—" }}</td>
+            <td style="padding:0.5rem;">{{ proof.status.capitalize() }}</td>
+            <td style="padding:0.5rem;">{{ (proof.updated_at or proof.created_at).strftime('%Y-%m-%d %H:%M') }}</td>
+            <td style="padding:0.5rem;">
+              <a href="{{ url_for('customer.view_proof', share_id=proof.share_id) }}" class="button">View</a>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  {% else %}
+    <p>No proofs are assigned to you yet.</p>
+  {% endif %}
+
+  <p style="margin-top:2rem;">
+    <a href="{{ url_for('customer.logout') }}">Sign out</a>
+  </p>
+{% endblock %}
