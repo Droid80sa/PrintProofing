@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Your Password</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<style type="text/tailwindcss">
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .form-input:focus {
+            --tw-ring-color: transparent;
+        }
+    </style>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#195de6",
+              "background-light": "#f6f6f8",
+              "background-dark": "#111621",
+            },
+            fontFamily: {
+              "display": ["Inter"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#333333] dark:text-gray-300">
+<div class="relative flex min-h-screen w-full flex-col items-center justify-center p-4">
+<main class="w-full max-w-lg space-y-8">
+<header class="text-center space-y-4">
+<div class="flex justify-center items-center">
+<img alt="Agency Logo" class="h-10" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOmLYh2k88bXdh-pieB8PIqcWOKWMnZh_pXk1YeZYhVffmR-D5qTsCCpaR22LEGHcO6TMWGXMOl1dJ7Or3RB6ZEktU3apeQVfobEteK3ABtqbpMszNsj0fLsstPf2Wq0Qj-vmvbdeLReyY5huyPHazXK_1TUYKreknXI5mM_3Tgzn8rWFqYZKZ9skwbEu6VAndd8WFAO7X4R-VYFP4QpLtO3LO8smQvzzTOPzHQwqd_QpA88kFxaxnE6v6fZCYLBq3rIZb7WgR0asC"/>
+</div>
+<div class="space-y-2">
+<h1 class="text-3xl font-black text-gray-900 dark:text-white leading-tight tracking-tight">Welcome, Jane Doe! Set up your account.</h1>
+<p class="text-base text-gray-600 dark:text-gray-400">You've been invited to collaborate. Please create a secure password to access your proofs and start reviewing.</p>
+</div>
+</header>
+<div class="bg-white dark:bg-background-dark rounded-xl shadow-sm p-8 space-y-6 border border-gray-200 dark:border-gray-700">
+<form class="space-y-6">
+<div class="space-y-4">
+<label class="flex flex-col">
+<p class="text-sm font-medium text-gray-700 dark:text-gray-300 pb-2">New Password</p>
+<div class="flex w-full items-stretch rounded-lg">
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 dark:border-gray-600 bg-transparent dark:bg-gray-800/50 h-12 placeholder:text-gray-400 dark:placeholder:text-gray-500 p-3 text-base font-normal leading-normal" placeholder="Enter your new password" type="password" value=""/>
+</div>
+</label>
+<label class="flex flex-col">
+<p class="text-sm font-medium text-gray-700 dark:text-gray-300 pb-2">Confirm New Password</p>
+<div class="flex w-full items-stretch rounded-lg">
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 dark:border-gray-600 bg-transparent dark:bg-gray-800/50 h-12 placeholder:text-gray-400 dark:placeholder:text-gray-500 p-3 text-base font-normal leading-normal" placeholder="Re-enter your new password" type="password" value=""/>
+</div>
+</label>
+</div>
+<div class="space-y-2 pt-2">
+<p class="text-sm font-medium text-gray-700 dark:text-gray-300">Password must contain:</p>
+<div class="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-1 text-sm text-gray-600 dark:text-gray-400">
+<div class="flex items-center gap-x-2 py-1">
+<span class="material-symbols-outlined text-base text-[#28A745]">check_circle</span>
+<p>At least 12 characters</p>
+</div>
+<div class="flex items-center gap-x-2 py-1">
+<span class="material-symbols-outlined text-base text-[#28A745]">check_circle</span>
+<p>At least one uppercase letter</p>
+</div>
+<div class="flex items-center gap-x-2 py-1">
+<span class="material-symbols-outlined text-base text-gray-400 dark:text-gray-500">radio_button_unchecked</span>
+<p>At least one number</p>
+</div>
+<div class="flex items-center gap-x-2 py-1">
+<span class="material-symbols-outlined text-base text-gray-400 dark:text-gray-500">radio_button_unchecked</span>
+<p>At least one special character</p>
+</div>
+</div>
+<!-- Example Error Message -->
+<!-- 
+                         <div class="flex items-center gap-x-2 text-sm text-[#DC3545] pt-2">
+                            <span class="material-symbols-outlined text-base">cancel</span>
+                            <p>Passwords do not match.</p>
+                         </div>
+                         -->
+</div>
+<button class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-base font-medium text-white bg-primary hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary dark:focus:ring-offset-background-dark" type="submit">Set My Password</button>
+</form>
+</div>
+<footer class="text-center">
+<div class="text-sm text-gray-500 dark:text-gray-400">
+<a class="font-medium text-primary hover:underline" href="#">Support</a>
+<span class="mx-2">·</span>
+<a class="font-medium text-primary hover:underline" href="#">Privacy Policy</a>
+</div>
+</footer>
+</main>
+</div>
+</body></html>

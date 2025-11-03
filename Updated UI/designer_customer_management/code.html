@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ProofFlow - Customers</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#195de6",
+            "background-light": "#f6f6f8",
+            "background-dark": "#111621",
+          },
+          fontFamily: {
+            "display": ["Inter", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 20
+    }
+  </style>
+</head>
+<body class="font-display bg-background-light dark:bg-background-dark text-gray-800 dark:text-gray-200">
+<div class="relative flex h-auto min-h-screen w-full flex-col group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-gray-200 dark:border-gray-700/50 bg-background-light dark:bg-background-dark sticky top-0 z-10 px-4 sm:px-6 lg:px-10 py-3">
+<div class="flex items-center gap-4 text-gray-900 dark:text-white">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-[-0.015em]">ProofFlow</h2>
+</div>
+<div class="flex flex-1 justify-end items-center gap-4">
+<nav class="hidden md:flex items-center gap-6">
+<a class="text-sm font-medium leading-normal text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="#">Projects</a>
+<a class="text-sm font-medium leading-normal text-primary dark:text-primary" href="#">Customers</a>
+<a class="text-sm font-medium leading-normal text-gray-600 dark:text-gray-300 hover:text-primary dark:hover:text-primary" href="#">Settings</a>
+</nav>
+<div class="flex items-center gap-2">
+<button class="flex h-10 w-10 cursor-pointer items-center justify-center overflow-hidden rounded-full bg-transparent text-gray-500 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-800">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User avatar image" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBePFU0-c85_cyLQBJBAqqgdk37k0CGMPL_p_xO-dH-5MrMiqKcjYm9AzAxaFFYmCHC0zNv1nAFxNQUWaBh1sgZc-YCmiwKPUslbks0drNFmzkXlhLCXlibXnmLUOLew4RIL9hHlza0ow9rCV4gUch9UNZ2LwfEF2GDc0vNwShI4eGTSGj1271HvQpqgTM5hSGkxlNgO8hW_PSxsPohQh9NCCF2uQvu6FnkFfwYcEwziQSyN2lUEeeTgl8bS0uzuRGKYkwApfAblwdl");'></div>
+</div>
+</div>
+</header>
+<main class="px-4 sm:px-6 lg:px-10 flex flex-1 justify-center py-8">
+<div class="layout-content-container flex flex-col w-full max-w-6xl flex-1">
+<div class="flex flex-col sm:flex-row flex-wrap justify-between items-start sm:items-center gap-4 mb-6">
+<h1 class="text-3xl font-black leading-tight tracking-[-0.033em] text-gray-900 dark:text-white min-w-72">Customers</h1>
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-5 bg-primary text-white text-sm font-bold leading-normal tracking-[0.015em] gap-2 hover:bg-primary/90 transition-colors">
+<span class="material-symbols-outlined text-lg">add</span>
+<span class="truncate">Add Customer</span>
+</button>
+</div>
+<div class="mb-6">
+<label class="flex flex-col min-w-40 h-12 w-full max-w-md">
+<div class="flex w-full flex-1 items-stretch rounded-xl h-full border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-gray-900/50 focus-within:ring-2 focus-within:ring-primary focus-within:border-primary">
+<div class="text-gray-400 dark:text-gray-500 flex items-center justify-center pl-4">
+<span class="material-symbols-outlined text-xl">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden text-gray-900 dark:text-gray-100 focus:outline-0 focus:ring-0 border-none bg-transparent h-full placeholder:text-gray-400 dark:placeholder:text-gray-500 px-2 text-sm font-normal leading-normal" placeholder="Search by name or company" value=""/>
+</div>
+</label>
+</div>
+<div class="@container">
+<div class="flex overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700/50 bg-white dark:bg-gray-900/50">
+<table class="w-full">
+<thead class="bg-gray-50 dark:bg-gray-900">
+<tr>
+<th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400">Customer Name</th>
+<th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 hidden @[480px]:table-cell">Company</th>
+<th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 hidden @[768px]:table-cell">Email</th>
+<th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 hidden @[640px]:table-cell">Invite Status</th>
+<th class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-500 dark:text-gray-400 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200 dark:divide-gray-800">
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="h-[72px] px-4 py-2 text-sm font-medium text-gray-900 dark:text-white">Elena Rodriguez</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hidden @[480px]:table-cell">Creative Solutions Inc.</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hidden @[768px]:table-cell">elena.r@creativesolutions.com</td>
+<td class="h-[72px] px-4 py-2 text-sm hidden @[640px]:table-cell">
+<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-green-100 text-green-800 dark:bg-green-900/50 dark:text-green-300">Active</span>
+</td>
+<td class="h-[72px] px-4 py-2 text-right">
+<div class="flex justify-end items-center gap-1">
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-red-600 dark:hover:text-red-500">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200">
+<span class="material-symbols-outlined text-lg">send</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="h-[72px] px-4 py-2 text-sm font-medium text-gray-900 dark:text-white">Benjamin Carter</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hidden @[480px]:table-cell">Innovate Marketing</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hidden @[768px]:table-cell">ben.c@innovatemarketing.net</td>
+<td class="h-[72px] px-4 py-2 text-sm hidden @[640px]:table-cell">
+<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-yellow-100 text-yellow-800 dark:bg-yellow-900/50 dark:text-yellow-300">Pending</span>
+</td>
+<td class="h-[72px] px-4 py-2 text-right">
+<div class="flex justify-end items-center gap-1">
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-red-600 dark:hover:text-red-500">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-gray-400 dark:text-gray-600 cursor-not-allowed" disabled="">
+<span class="material-symbols-outlined text-lg">send</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="h-[72px] px-4 py-2 text-sm font-medium text-gray-900 dark:text-white">Olivia Chen</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hidden @[480px]:table-cell">Starlight Studios</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hidden @[768px]:table-cell">olivia.c@starlightstudios.co</td>
+<td class="h-[72px] px-4 py-2 text-sm hidden @[640px]:table-cell">
+<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-red-100 text-red-800 dark:bg-red-900/50 dark:text-red-300">Expired</span>
+</td>
+<td class="h-[72px] px-4 py-2 text-right">
+<div class="flex justify-end items-center gap-1">
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-red-600 dark:hover:text-red-500">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200">
+<span class="material-symbols-outlined text-lg">send</span>
+</button>
+</div>
+</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+<td class="h-[72px] px-4 py-2 text-sm font-medium text-gray-900 dark:text-white">Samuel Jones</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hidden @[480px]:table-cell">Apex Digital</td>
+<td class="h-[72px] px-4 py-2 text-sm text-gray-500 dark:text-gray-400 hidden @[768px]:table-cell">sam.j@apexdigital.io</td>
+<td class="h-[72px] px-4 py-2 text-sm hidden @[640px]:table-cell">
+<span class="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-semibold bg-gray-100 text-gray-800 dark:bg-gray-700 dark:text-gray-300">Not Invited</span>
+</td>
+<td class="h-[72px] px-4 py-2 text-right">
+<div class="flex justify-end items-center gap-1">
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200">
+<span class="material-symbols-outlined text-lg">edit</span>
+</button>
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-red-600 dark:hover:text-red-500">
+<span class="material-symbols-outlined text-lg">delete</span>
+</button>
+<button class="h-8 w-8 rounded-lg flex items-center justify-center text-gray-500 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-700 dark:hover:text-gray-200">
+<span class="material-symbols-outlined text-lg">send</span>
+</button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>

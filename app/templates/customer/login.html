@@ -1,0 +1,37 @@
+{% extends "base_no_nav.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Customer Portal Login{% endblock %}
+{% block content %}
+  <section class="mx-auto flex w-full max-w-3xl flex-col items-center gap-10 text-center">
+    <div class="flex flex-col items-center gap-4">
+      {% if branding.logo_url %}
+        <img src="{{ branding.logo_url }}" alt="{{ branding.company_name }} logo" class="h-20 w-auto max-w-[240px] rounded-xl object-contain shadow-card">
+      {% endif %}
+      <div class="space-y-1">
+        <h1 class="text-3xl font-black text-slate-900">{{ branding.company_name }}</h1>
+        <p class="text-base text-slate-500">Securely review and approve your creative work.</p>
+      </div>
+    </div>
+
+    <div class="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-card">
+      <form method="post" class="space-y-6">
+        <input type="hidden" name="csrf_token" value="{{ customer_csrf_token }}">
+        <div class="space-y-2 text-left">
+          <label for="email" class="text-sm font-medium text-slate-700">Email address</label>
+          <input type="email" id="email" name="email" required autofocus class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="name@example.com">
+        </div>
+        <div class="space-y-2 text-left">
+          <div class="flex items-center justify-between">
+            <label for="password" class="text-sm font-medium text-slate-700">Password</label>
+            <a href="{{ url_for('customer.reset_request') }}" class="text-sm font-semibold text-brand-primary hover:underline">Forgot password?</a>
+          </div>
+          <input type="password" id="password" name="password" required class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="Enter your password">
+        </div>
+        <button type="submit" class="btn-primary w-full justify-center">Sign in</button>
+      </form>
+    </div>
+    <div class="text-sm text-slate-500">
+      Need help? <a href="mailto:{{ branding.support_email or 'support@example.com' }}" class="font-semibold text-brand-primary hover:underline">Contact support</a>
+    </div>
+  </section>
+{% endblock %}

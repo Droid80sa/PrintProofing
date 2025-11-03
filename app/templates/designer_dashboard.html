@@ -1,0 +1,134 @@
+{% extends "base.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}My Proofs – {{ branding.company_name }}{% endblock %}
+{% block content %}
+  <section class="space-y-8">
+    <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div class="space-y-1">
+        <h1 class="text-3xl font-black text-slate-900">My proofs</h1>
+        {% if designer %}
+          <p class="text-sm text-slate-500">Signed in as <strong>{{ designer.display_name }}</strong></p>
+        {% else %}
+          <p class="text-sm text-rose-600">No designer profile is linked to this account yet.</p>
+        {% endif %}
+      </div>
+      <div class="flex flex-wrap items-center gap-2">
+        {{ ui.button("Upload new proof", icon="upload", href=url_for('upload'), extra_classes="w-full sm:w-auto") }}
+        {{ ui.button("Add customer", variant="secondary", icon="person_add", href=url_for('designer_customers'), extra_classes="w-full sm:w-auto") }}
+      </div>
+    </header>
+
+    {% if smtp_status %}
+      <div class="rounded-xl border px-4 py-3 text-sm font-medium {% if smtp_status.level == 'success' %}border-emerald-200 bg-emerald-50 text-emerald-700{% elif smtp_status.level == 'error' %}border-rose-200 bg-rose-50 text-rose-700{% elif smtp_status.level == 'warning' %}border-amber-200 bg-amber-50 text-amber-700{% else %}border-sky-200 bg-sky-50 text-sky-700{% endif %}">
+        {{ smtp_status.message }}
+      </div>
+    {% endif %}
+
+    {% if smtp_can_test %}
+      <div class="card">
+        <form method="post" action="{{ url_for('designer_smtp_test') }}" class="space-y-4">
+          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+          <div class="flex flex-col gap-2 sm:flex-row sm:items-end">
+            <div class="flex-1 space-y-2">
+              <label for="designer-test-email" class="text-sm font-medium text-slate-700">Send SMTP test email to</label>
+              <input type="email" id="designer-test-email" name="test_email" value="{{ current_user.email }}" required class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+            </div>
+            {{ ui.button("Send test", icon="send", type="submit", extra_classes="sm:w-auto w-full justify-center") }}
+          </div>
+        </form>
+      </div>
+    {% endif %}
+
+    {% if proofs %}
+      <div class="card space-y-4">
+        <div class="grid gap-3 sm:grid-cols-2">
+          <div class="space-y-1">
+            <label for="designerSearch" class="text-sm font-medium text-slate-700">Search</label>
+            <input type="search" id="designerSearch" placeholder="Search proofs…" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+          </div>
+          <div class="space-y-1">
+            <label for="designerStatusFilter" class="text-sm font-medium text-slate-700">Status</label>
+            <select id="designerStatusFilter" class="form-select block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+              <option value="all" selected>All statuses</option>
+              <option value="approved">Approved</option>
+              <option value="pending">Pending</option>
+              <option value="declined">Declined</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <tr>
+              <th class="px-6 py-3">Job name</th>
+              <th class="px-6 py-3">Status</th>
+              <th class="px-6 py-3">Last action</th>
+              <th class="px-6 py-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200" id="proofRows">
+            {% for proof in proofs %}
+              <tr class="hover:bg-slate-50" data-status="{{ proof.status|lower }}" data-job="{{ proof.job_name|lower }}">
+                <td class="px-6 py-4 text-sm font-medium text-slate-900">
+                  {{ proof.job_name }}
+                </td>
+                <td class="px-6 py-4 text-sm">
+                  {{ ui.status_badge(proof.status|lower) }}
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-500">
+                  {{ proof.decision_timestamp_display or proof.updated_at_display }}
+                  {% if proof.approver_name %}
+                    <br><span class="text-xs text-slate-400">By {{ proof.approver_name }}</span>
+                  {% endif %}
+                  {% if proof.client_comment %}
+                    <br><span class="text-xs text-slate-400">“{{ proof.client_comment }}”</span>
+                  {% endif %}
+                </td>
+                <td class="px-6 py-4 text-right text-sm">
+                  <div class="flex flex-wrap justify-end gap-2">
+                    {{ ui.button("Open", href=proof.link, variant="secondary", extra_classes="justify-center") }}
+                    {{ ui.button("New version", href=url_for('new_version', job_id=proof.share_id), variant="secondary", extra_classes="justify-center") }}
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-16 text-center">
+        <p class="text-lg font-semibold text-slate-700">No proofs uploaded yet</p>
+        <p class="max-w-md text-sm text-slate-500">Upload your first proof to start sharing work with clients and tracking approvals.</p>
+        {{ ui.button("Upload new proof", icon="upload", href=url_for('upload')) }}
+      </div>
+    {% endif %}
+  </section>
+
+  <script>
+    (function () {
+      const searchInput = document.getElementById('designerSearch');
+      const statusFilter = document.getElementById('designerStatusFilter');
+      const rows = Array.from(document.querySelectorAll('#proofRows tr'));
+
+      if (!rows.length) {
+        return;
+      }
+
+      function applyFilters() {
+        const query = (searchInput.value || '').trim().toLowerCase();
+        const status = statusFilter.value;
+
+        rows.forEach((row) => {
+          const matchesStatus = status === 'all' || row.dataset.status === status;
+          const matchesSearch = !query || row.dataset.job.includes(query);
+          row.style.display = matchesStatus && matchesSearch ? '' : 'none';
+        });
+      }
+
+      searchInput.addEventListener('input', applyFilters);
+      statusFilter.addEventListener('change', applyFilters);
+    })();
+  </script>
+{% endblock %}

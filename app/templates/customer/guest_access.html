@@ -1,0 +1,45 @@
+{% extends "base_no_nav.html" %}
+{% block title %}Guest Proof Access – {{ branding.company_name }}{% endblock %}
+{% block content %}
+  <section class="mx-auto max-w-md space-y-6">
+    <header class="space-y-2 text-center">
+      <h1 class="text-3xl font-black text-slate-900">Enter your PIN</h1>
+      <p class="text-sm text-slate-500">We emailed a one-time PIN to <strong>{{ guest.email }}</strong> so you can view “{{ proof.job_name }}”.</p>
+    </header>
+
+    {% if error_message %}
+      <div class="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">{{ error_message }}</div>
+    {% endif %}
+
+    {% if not expired %}
+      <form method="POST" class="space-y-4">
+        <input type="hidden" name="csrf_token" value="{{ customer_csrf_token }}">
+        <div class="space-y-1">
+          <label for="guest-pin" class="text-sm font-medium text-slate-700">One-time PIN</label>
+          <input
+            type="text"
+            id="guest-pin"
+            name="pin"
+            inputmode="numeric"
+            pattern="[0-9]{6}"
+            maxlength="6"
+            required
+            class="form-input block w-full rounded-lg border-slate-300 text-center text-lg tracking-[0.4em] focus:border-brand-primary focus:ring-brand-primary"
+            placeholder="123456"
+            autocomplete="one-time-code"
+          >
+          <p class="text-xs text-slate-500">The PIN expires{% if guest.expires_at %} {{ guest.expires_at.strftime('%Y-%m-%d %H:%M %Z') if guest.expires_at.tzinfo else guest.expires_at.strftime('%Y-%m-%d %H:%M UTC') }}{% else %} soon{% endif %}. Enter it exactly as shown in the email.</p>
+        </div>
+        <button type="submit" class="btn-primary w-full justify-center">Unlock proof</button>
+      </form>
+    {% else %}
+      <div class="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+        Need a fresh link? Reply to your designer and ask for a new guest invitation.
+      </div>
+    {% endif %}
+
+    <footer class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-xs text-slate-500">
+      Having trouble? Contact the studio that sent this proof so they can issue a new PIN.
+    </footer>
+  </section>
+{% endblock %}

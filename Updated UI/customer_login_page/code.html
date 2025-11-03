@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login - Proofing Portal</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#195de6",
+              "background-light": "#f6f6f8",
+              "background-dark": "#111621",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      .material-symbols-outlined {
+        font-variation-settings:
+        'FILL' 0,
+        'wght' 400,
+        'GRAD' 0,
+        'opsz' 24
+      }
+    </style>
+</head>
+<body class="font-display">
+<div class="relative flex min-h-screen w-full flex-col items-center justify-center bg-background-light dark:bg-background-dark p-4 sm:p-6 lg:p-8">
+<div class="flex w-full max-w-md flex-col items-center">
+<!-- Header Section -->
+<div class="mb-8 flex flex-col items-center text-center">
+<div class="mb-4 h-16 w-16">
+<img class="h-full w-full rounded-full object-cover" data-alt="Company Logo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCibhulPthuD6OvpiRQoB0L79Cyh-HPRV3Hqh98iKulcc7H5swDJkFUtsTdU1RXTDyNMxlAPc0W0B7JWLSRmPMy1SNNxeg8jSm-z6s8AbrihVIW8TElu_aUs3gHgkX6m8Y4OCJRTRqrop4KVq43ZMGpEWSM3QSdhp7yM36wBnlQ0Gz9LDfa9uZDQhB5bKitOxQX4j8LTwQMB6WIeVsiINKVw2W3iGVctwY-3WU8QzhVRckiJDil64Tn0UjUTkEt6fT2vpUgKkVAxHeY"/>
+</div>
+<h1 class="text-[#0e121b] dark:text-white tracking-tight text-3xl font-bold leading-tight">Welcome to [Company Name]'s Proofing Portal</h1>
+<p class="text-[#4e6797] dark:text-gray-400 mt-2 text-base font-normal leading-normal">Securely review and approve your creative work.</p>
+</div>
+<!-- Login Form Card -->
+<div class="w-full rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-background-dark p-6 sm:p-8 shadow-sm">
+<form class="flex flex-col gap-y-6">
+<div class="flex flex-col">
+<label class="text-[#0e121b] dark:text-white text-sm font-medium leading-normal pb-2" for="email">Email Address</label>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#0e121b] dark:text-white focus:outline-0 border border-[#d0d7e7] dark:border-gray-600 bg-background-light dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 h-11 placeholder:text-[#4e6797] dark:placeholder:text-gray-500 px-3 py-2 text-base font-normal leading-normal" id="email" placeholder="Enter your email" type="email" value=""/>
+</div>
+<div class="flex flex-col">
+<div class="flex items-center justify-between pb-2">
+<label class="text-[#0e121b] dark:text-white text-sm font-medium leading-normal" for="password">Password</label>
+<a class="text-sm font-medium text-primary hover:underline" href="#">Forgot Password?</a>
+</div>
+<div class="relative flex w-full flex-1 items-stretch">
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-[#0e121b] dark:text-white focus:outline-0 border border-[#d0d7e7] dark:border-gray-600 bg-background-light dark:bg-gray-800 focus:border-primary focus:ring-2 focus:ring-primary/20 h-11 placeholder:text-[#4e6797] dark:placeholder:text-gray-500 px-3 py-2 text-base font-normal leading-normal pr-10" id="password" placeholder="Enter your password" type="password" value=""/>
+<button aria-label="Toggle password visibility" class="absolute inset-y-0 right-0 flex items-center pr-3 text-[#4e6797] dark:text-gray-400" type="button">
+<span class="material-symbols-outlined" data-icon="visibility">visibility</span>
+</button>
+</div>
+</div>
+<button class="flex h-11 w-full items-center justify-center rounded-lg bg-primary px-4 py-2 text-base font-medium text-white transition-colors hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 dark:focus:ring-offset-background-dark" type="submit">Log In</button>
+</form>
+</div>
+<!-- Footer Section -->
+<div class="mt-8 flex flex-col items-center gap-2 text-center text-sm text-[#4e6797] dark:text-gray-500">
+<a class="font-medium hover:text-primary hover:underline" href="#">Need help?</a>
+<p>Powered by Proofify</p>
+</div>
+</div>
+</div>
+</body></html>

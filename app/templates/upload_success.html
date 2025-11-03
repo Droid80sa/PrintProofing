@@ -1,0 +1,74 @@
+{% extends "base_no_nav.html" %}
+{% block title %}Proof Uploaded – {{ branding.company_name }}{% endblock %}
+{% block content %}
+  <section class="mx-auto max-w-2xl space-y-6 text-center">
+    {% if branding.logo_url %}
+      <img src="{{ branding.logo_url }}" alt="{{ branding.company_name }} logo" class="mx-auto h-20 w-auto max-w-[240px] rounded-xl object-contain shadow-card">
+    {% endif %}
+    <div class="rounded-2xl border border-emerald-200 bg-white p-8 shadow-card">
+      <h2 class="text-2xl font-black text-emerald-700">✅ Proof Uploaded Successfully!</h2>
+      <p class="mt-2 text-sm text-slate-600">Your proof for <strong>{{ job_name or 'Untitled job' }}</strong> is ready.</p>
+
+      {% if notify_customer %}
+        {% if notification_status == "queued" %}
+          <p class="mt-4 rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">Customer notification has been queued and will be sent shortly.</p>
+        {% elif notification_status == "failed" %}
+          <p class="mt-4 rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+            We couldn&apos;t queue the customer email right now.{% if notification_error %} <em>{{ notification_error }}</em>{% endif %}
+          </p>
+        {% endif %}
+      {% endif %}
+
+      <div class="mt-6 space-y-2">
+        <p class="text-sm font-medium text-slate-600">Share this link with the client:</p>
+        <div class="flex items-center gap-2">
+          <input type="text" id="shareLink" value="{{ share_url }}" readonly class="form-input flex-1 rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+          <button type="button" class="btn-secondary" onclick="copyShareLink()">Copy</button>
+        </div>
+      </div>
+
+      {% if guest_pin %}
+        <div class="mt-4 space-y-2 text-left">
+          <p class="text-sm font-medium text-slate-600">Guest access PIN</p>
+          <div class="flex items-center gap-2">
+            <input type="text" id="guestPin" value="{{ guest_pin }}" readonly class="form-input flex-1 rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+            <button type="button" class="btn-secondary" onclick="copyGuestPin()">Copy</button>
+          </div>
+          <p class="text-xs text-slate-500">PIN sent to {{ guest_email or 'the guest' }}{% if guest_expires_at %}; expires {{ guest_expires_at.strftime('%Y-%m-%d %H:%M %Z') if guest_expires_at.tzinfo else guest_expires_at.strftime('%Y-%m-%d %H:%M UTC') }}{% endif %}.</p>
+        </div>
+      {% endif %}
+
+      <div class="mt-6 flex flex-col gap-3 sm:flex-row sm:justify-center">
+        <a href="{{ share_url }}" class="btn-primary justify-center" target="_blank" rel="noopener">View proof</a>
+        <a href="{{ url_for('upload') }}" class="btn-secondary justify-center">Upload another</a>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    function copyShareLink() {
+      const input = document.getElementById('shareLink');
+      input.select();
+      input.setSelectionRange(0, 99999);
+      navigator.clipboard?.writeText(input.value).then(() => {
+        alert('Link copied to clipboard!');
+      }).catch(() => {
+        document.execCommand('copy');
+        alert('Link copied to clipboard!');
+      });
+    }
+
+    function copyGuestPin() {
+      const input = document.getElementById('guestPin');
+      if (!input) return;
+      input.select();
+      input.setSelectionRange(0, 99999);
+      navigator.clipboard?.writeText(input.value).then(() => {
+        alert('PIN copied to clipboard!');
+      }).catch(() => {
+        document.execCommand('copy');
+        alert('PIN copied to clipboard!');
+      });
+    }
+  </script>
+{% endblock %}

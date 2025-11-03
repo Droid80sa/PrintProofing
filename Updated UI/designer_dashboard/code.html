@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>ProofFlow Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#195de6",
+              "background-light": "#f6f6f8",
+              "background-dark": "#111621",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      .material-symbols-outlined {
+        font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        font-size: 20px;
+      }
+    </style>
+</head>
+<body class="bg-background-light dark:bg-background-dark font-display text-[#111827] dark:text-gray-300">
+<div class="relative flex h-auto min-h-screen w-full flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 px-6 sm:px-10 py-3 bg-white dark:bg-gray-800/50 sticky top-0 z-10 backdrop-blur-sm">
+<div class="flex items-center gap-4 text-gray-900 dark:text-white">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M44 4H30.6666V17.3334H17.3334V30.6666H4V44H44V4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-lg font-bold leading-tight tracking-tight">ProofFlow</h2>
+</div>
+<div class="flex flex-1 justify-end items-center gap-4 sm:gap-6">
+<label class="hidden md:flex flex-col min-w-40 !h-10 max-w-64">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-gray-500 dark:text-gray-400 flex border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 items-center justify-center pl-3 rounded-l-lg border-r-0">
+<span class="material-symbols-outlined">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-gray-900 dark:text-white focus:outline-0 focus:ring-2 focus:ring-primary/50 border border-gray-300 dark:border-gray-600 bg-gray-100 dark:bg-gray-700 h-full placeholder:text-gray-500 dark:placeholder:text-gray-400 px-4 rounded-l-none border-l-0 pl-2 text-sm font-normal leading-normal" placeholder="Search proofs..." value=""/>
+</div>
+</label>
+<div class="flex items-center gap-2">
+<button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-wide gap-2">
+<span class="material-symbols-outlined">upload</span>
+<span class="truncate hidden sm:inline">Upload New Proof</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 gap-2 text-sm font-bold leading-normal tracking-wide min-w-0 px-2.5">
+<span class="material-symbols-outlined">dark_mode</span>
+</button>
+</div>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-10" data-alt="User profile avatar" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCe5HFnNBtGWN3dTPmOPUc-UFWRbU64YA0G3vzyz0sJkCyEO6usSZTP8eLA9LgAtgs9qfveIzdBJyT4JpPSssjrN087GLf_boXXgIKVl4ZgNd5cxv4M474QqZFfn72HAV8KuS23_S--Vmn-Wkd8fX40bFbN-QobvT_UwISo3nK1w1ULj5DO7n3K8AkauPLw4aVs7-LLPqNA8bTq34lVffPXIb1vow6kWbtfY-e_jHTqYuQCDsdl2TQw9dX8MD0JbWYfM9iD6sgjfeo8");'></div>
+</div>
+</header>
+<main class="flex-grow p-4 sm:p-6 lg:p-10">
+<div class="max-w-7xl mx-auto">
+<div class="flex flex-wrap justify-between gap-4 items-center mb-6">
+<p class="text-gray-900 dark:text-white text-3xl sm:text-4xl font-black leading-tight tracking-tighter">My Proofs</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2 flex flex-col gap-6">
+<div class="flex flex-wrap gap-3 overflow-x-auto pb-2">
+<div class="flex h-8 shrink-0 cursor-pointer items-center justify-center gap-x-2 rounded-lg bg-primary text-white pl-4 pr-4">
+<p class="text-sm font-medium leading-normal">All</p>
+</div>
+<div class="flex h-8 shrink-0 cursor-pointer items-center justify-center gap-x-2 rounded-lg bg-gray-200 dark:bg-gray-700 pl-4 pr-4 hover:bg-gray-300 dark:hover:bg-gray-600">
+<p class="text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal">Pending</p>
+</div>
+<div class="flex h-8 shrink-0 cursor-pointer items-center justify-center gap-x-2 rounded-lg bg-gray-200 dark:bg-gray-700 pl-4 pr-4 hover:bg-gray-300 dark:hover:bg-gray-600">
+<p class="text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal">Approved</p>
+</div>
+<div class="flex h-8 shrink-0 cursor-pointer items-center justify-center gap-x-2 rounded-lg bg-gray-200 dark:bg-gray-700 pl-4 pr-4 hover:bg-gray-300 dark:hover:bg-gray-600">
+<p class="text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal">Changes Requested</p>
+</div>
+</div>
+<div class="@container bg-white dark:bg-gray-800 rounded-xl shadow-sm">
+<div class="flex overflow-hidden rounded-xl border border-gray-200 dark:border-gray-700">
+<table class="flex-1 w-full">
+<thead class="bg-gray-50 dark:bg-gray-900/50">
+<tr>
+<th class="table-job-name px-4 py-3 text-left text-gray-600 dark:text-gray-400 w-[30%] text-xs font-medium uppercase tracking-wider">Job Name</th>
+<th class="table-status px-4 py-3 text-left text-gray-600 dark:text-gray-400 w-36 text-xs font-medium uppercase tracking-wider">Status</th>
+<th class="table-updated px-4 py-3 text-left text-gray-600 dark:text-gray-400 w-48 text-xs font-medium uppercase tracking-wider">Last Updated</th>
+<th class="table-summary px-4 py-3 text-left text-gray-600 dark:text-gray-400 w-[25%] text-xs font-medium uppercase tracking-wider">Decision Summary</th>
+<th class="table-actions px-4 py-3 text-center text-gray-600 dark:text-gray-400 w-20 text-xs font-medium uppercase tracking-wider">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-gray-200 dark:divide-gray-700">
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+<td class="table-job-name h-[72px] px-4 py-2 w-[30%] text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal">Spring Campaign Brochure</td>
+<td class="table-status h-[72px] px-4 py-2 w-36 text-sm font-normal leading-normal">
+<div class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-yellow-100 dark:bg-yellow-500/20 text-yellow-800 dark:text-yellow-300">
+<span class="size-2 rounded-full bg-yellow-400"></span>
+                                                    Pending
+                                                </div>
+</td>
+<td class="table-updated h-[72px] px-4 py-2 w-48 text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">2 hours ago</td>
+<td class="table-summary h-[72px] px-4 py-2 w-[25%] text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">1 Approved / 0 Changes Requested</td>
+<td class="table-actions h-[72px] px-4 py-2 w-20 text-center text-gray-500 dark:text-gray-400 text-lg font-bold">...</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+<td class="table-job-name h-[72px] px-4 py-2 w-[30%] text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal">Website Redesign Mockups</td>
+<td class="table-status h-[72px] px-4 py-2 w-36 text-sm font-normal leading-normal">
+<div class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-green-100 dark:bg-green-500/20 text-green-800 dark:text-green-300">
+<span class="size-2 rounded-full bg-green-400"></span>
+                                                    Approved
+                                                </div>
+</td>
+<td class="table-updated h-[72px] px-4 py-2 w-48 text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">Yesterday at 3:15 PM</td>
+<td class="table-summary h-[72px] px-4 py-2 w-[25%] text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">4 Approved / 0 Changes Requested</td>
+<td class="table-actions h-[72px] px-4 py-2 w-20 text-center text-gray-500 dark:text-gray-400 text-lg font-bold">...</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+<td class="table-job-name h-[72px] px-4 py-2 w-[30%] text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal">New Logo Concepts</td>
+<td class="table-status h-[72px] px-4 py-2 w-36 text-sm font-normal leading-normal">
+<div class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-red-100 dark:bg-red-500/20 text-red-800 dark:text-red-300">
+<span class="size-2 rounded-full bg-red-400"></span>
+                                                    Changes Requested
+                                                </div>
+</td>
+<td class="table-updated h-[72px] px-4 py-2 w-48 text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">Yesterday at 9:00 AM</td>
+<td class="table-summary h-[72px] px-4 py-2 w-[25%] text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">1 Approved / 3 Changes Requested</td>
+<td class="table-actions h-[72px] px-4 py-2 w-20 text-center text-gray-500 dark:text-gray-400 text-lg font-bold">...</td>
+</tr>
+<tr class="hover:bg-gray-50 dark:hover:bg-gray-700/50">
+<td class="table-job-name h-[72px] px-4 py-2 w-[30%] text-gray-800 dark:text-gray-200 text-sm font-medium leading-normal">Social Media Graphics Q3</td>
+<td class="table-status h-[72px] px-4 py-2 w-36 text-sm font-normal leading-normal">
+<div class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold bg-yellow-100 dark:bg-yellow-500/20 text-yellow-800 dark:text-yellow-300">
+<span class="size-2 rounded-full bg-yellow-400"></span>
+                                                    Pending
+                                                </div>
+</td>
+<td class="table-updated h-[72px] px-4 py-2 w-48 text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">3 days ago</td>
+<td class="table-summary h-[72px] px-4 py-2 w-[25%] text-gray-500 dark:text-gray-400 text-sm font-normal leading-normal">0 Approved / 0 Changes Requested</td>
+<td class="table-actions h-[72px] px-4 py-2 w-20 text-center text-gray-500 dark:text-gray-400 text-lg font-bold">...</td>
+</tr>
+</tbody>
+</table>
+</div>
+<style>
+                                @container(max-width:720px){.table-summary{display: none;}}
+                                @container(max-width:600px){.table-updated{display: none;}}
+                                @container(max-width:480px){.table-status{display: none;}}
+                            </style>
+</div>
+<!-- Empty State Example (commented out) -->
+<!-- <div class="flex flex-col items-center gap-6 rounded-xl border-2 border-dashed border-gray-300 dark:border-gray-600 px-6 py-14 bg-white dark:bg-gray-800">
+                            <div class="flex max-w-[480px] flex-col items-center gap-2">
+                                <p class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-tight max-w-[480px] text-center">No proofs uploaded yet</p>
+                                <p class="text-gray-600 dark:text-gray-400 text-sm font-normal leading-normal max-w-[480px] text-center">Get started by uploading your first design proof for review.</p>
+                            </div>
+                            <button class="flex min-w-[84px] max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-primary text-white text-sm font-bold leading-normal tracking-wide gap-2">
+                                <span class="material-symbols-outlined">upload</span>
+                                <span class="truncate">Upload New Proof</span>
+                            </button>
+                        </div> -->
+</div>
+<div class="lg:col-span-1 flex flex-col gap-6">
+<div class="flex flex-col gap-3">
+<button class="flex w-full min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-11 px-4 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-bold leading-normal tracking-wide border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600">
+<span class="material-symbols-outlined">person_add</span>
+<span class="truncate">Add New Customer</span>
+</button>
+<button class="flex w-full min-w-[84px] cursor-pointer items-center justify-center gap-2 overflow-hidden rounded-lg h-11 px-4 bg-white dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-bold leading-normal tracking-wide border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-600">
+<span class="material-symbols-outlined">send</span>
+<span class="truncate">Send Project Invite</span>
+</button>
+</div>
+<div class="bg-white dark:bg-gray-800 rounded-xl shadow-sm border border-gray-200 dark:border-gray-700 p-6">
+<h3 class="text-lg font-bold text-gray-900 dark:text-white mb-1">Email Configuration</h3>
+<p class="text-sm text-gray-500 dark:text-gray-400 mb-4">Connect your email to send proof notifications directly.</p>
+<div class="flex items-center gap-3 mb-5 p-3 rounded-lg bg-green-50 dark:bg-green-500/10 border border-green-200 dark:border-green-500/30">
+<span class="material-symbols-outlined text-green-600 dark:text-green-400">check_circle</span>
+<p class="text-sm font-medium text-green-800 dark:text-green-300">Status: Connected</p>
+</div>
+<!-- Example of Action Required state -->
+<!-- <div class="flex items-center gap-3 mb-5 p-3 rounded-lg bg-red-50 dark:bg-red-500/10 border border-red-200 dark:border-red-500/30">
+                                <span class="material-symbols-outlined text-red-600 dark:text-red-400">error</span>
+                                <p class="text-sm font-medium text-red-800 dark:text-red-300">Status: Action Required</p>
+                            </div> -->
+<button class="flex w-full min-w-[84px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-10 px-4 bg-gray-100 dark:bg-gray-700 text-gray-800 dark:text-gray-200 text-sm font-bold leading-normal tracking-wide hover:bg-gray-200 dark:hover:bg-gray-600">
+<span class="truncate">Send Test Email</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

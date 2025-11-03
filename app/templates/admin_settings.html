@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Admin – Branding Settings{% endblock %}
+{% block content %}
+  <section class="mx-auto max-w-4xl space-y-6">
+    <header>
+      <h1 class="text-3xl font-black text-slate-900">Branding settings</h1>
+      <p class="text-sm text-slate-500">Update colors, fonts, and email footer to match your organisation.</p>
+    </header>
+
+    <div class="card">
+      <form method="POST" class="space-y-4">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="space-y-1">
+            <label for="company-name" class="text-sm font-medium text-slate-700">Company name</label>
+            <input type="text" id="company-name" name="company_name" value="{{ branding.company_name }}" required class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+          </div>
+          <div class="space-y-1">
+            <label for="font-family" class="text-sm font-medium text-slate-700">Font family (CSS)</label>
+            <input type="text" id="font-family" name="font_family" value="{{ branding.font_family }}" placeholder="Roboto, sans-serif" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+          </div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div class="space-y-1">
+            <label for="primary-color" class="text-sm font-medium text-slate-700">Primary color</label>
+            <input type="color" id="primary-color" name="primary_color" value="{{ branding.primary_color }}" required class="h-12 w-full rounded-lg border border-slate-200">
+          </div>
+          <div class="space-y-1">
+            <label for="background-color" class="text-sm font-medium text-slate-700">Background color</label>
+            <input type="color" id="background-color" name="background_color" value="{{ branding.background_color }}" required class="h-12 w-full rounded-lg border border-slate-200">
+          </div>
+          <div class="space-y-1">
+            <label for="general-button-color" class="text-sm font-medium text-slate-700">General button color</label>
+            <input type="color" id="general-button-color" name="general_button_color" value="{{ branding.general_button_color }}" required class="h-12 w-full rounded-lg border border-slate-200">
+          </div>
+          <div class="space-y-1">
+            <label for="approve-button-color" class="text-sm font-medium text-slate-700">Approve button color</label>
+            <input type="color" id="approve-button-color" name="approve_button_color" value="{{ branding.approve_button_color }}" required class="h-12 w-full rounded-lg border border-slate-200">
+          </div>
+          <div class="space-y-1">
+            <label for="reject-button-color" class="text-sm font-medium text-slate-700">Reject button color</label>
+            <input type="color" id="reject-button-color" name="reject_button_color" value="{{ branding.reject_button_color }}" required class="h-12 w-full rounded-lg border border-slate-200">
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label for="email-footer" class="text-sm font-medium text-slate-700">Email footer</label>
+          <textarea id="email-footer" name="email_footer" rows="4" class="form-textarea block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">{{ branding.email_footer }}</textarea>
+        </div>
+
+        {{ ui.button("Save settings", icon="save", type="submit", extra_classes="justify-center") }}
+      </form>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,79 @@
+{# Shared Tailwind-powered UI macros. Import with:
+   {% import 'components/ui_macros.html' as ui %}
+#}
+
+{% macro button(label, variant="primary", size="md", icon=None, href=None, extra_classes="", type="button") -%}
+  {%- set base = "inline-flex items-center justify-center gap-2 font-semibold rounded-lg transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60" -%}
+  {%- if variant == "primary" -%}
+    {%- set colors = "bg-brand-primary text-white hover:brightness-110 focus-visible:outline-brand-primary" -%}
+  {%- elif variant == "secondary" -%}
+    {%- set colors = "border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 focus-visible:outline-brand-primary" -%}
+  {%- elif variant == "ghost" -%}
+    {%- set colors = "text-slate-600 hover:text-slate-900 hover:bg-slate-100 focus-visible:outline-brand-primary" -%}
+  {%- else -%}
+    {%- set colors = variant -%} {# Allow passing raw class string #}
+  {%- endif -%}
+
+  {%- if size == "sm" -%}
+    {%- set spacing = "px-3 py-1.5 text-sm" -%}
+  {%- elif size == "lg" -%}
+    {%- set spacing = "px-5 py-3 text-base" -%}
+  {%- else -%}
+    {%- set spacing = "px-4 py-2 text-sm" -%}
+  {%- endif -%}
+
+  {%- set classes = base ~ " " ~ colors ~ " " ~ spacing ~ " " ~ extra_classes -%}
+
+  {%- if href -%}
+    <a href="{{ href }}" class="{{ classes|trim }}">
+      {% if icon %}
+        <span class="material-symbols-outlined text-base">{{ icon }}</span>
+      {% endif %}
+      <span>{{ label }}</span>
+    </a>
+  {%- else -%}
+    <button type="{{ type }}" class="{{ classes|trim }}">
+      {% if icon %}
+        <span class="material-symbols-outlined text-base">{{ icon }}</span>
+      {% endif %}
+      <span>{{ label }}</span>
+    </button>
+  {%- endif -%}
+{%- endmacro %}
+
+{% macro status_badge(state, text=None) -%}
+  {%- set palette = {
+    "approved": "bg-emerald-100 text-emerald-700",
+    "pending": "bg-amber-100 text-amber-700",
+    "declined": "bg-rose-100 text-rose-700",
+    "expired": "bg-slate-200 text-slate-700",
+    "active": "bg-sky-100 text-sky-700"
+  } -%}
+  {%- set labels = {
+    "approved": "Approved",
+    "pending": "Pending",
+    "declined": "Changes Requested",
+    "expired": "Expired",
+    "active": "Active"
+  } -%}
+  {%- set badge_classes = palette.get(state, "bg-slate-200 text-slate-700") -%}
+  {%- set caption = text or labels.get(state, state|replace("_", " ")|title) -%}
+  <span class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold {{ badge_classes }}">
+    <span class="size-2 rounded-full bg-current opacity-60"></span>
+    {{ caption }}
+  </span>
+{%- endmacro %}
+
+{% macro card(title=None, subtitle=None, extra_classes="") -%}
+  <div class="card {{ extra_classes }}">
+    {% if title %}
+      <div class="mb-2 flex items-center justify-between gap-2">
+        <h3 class="text-lg font-semibold">{{ title }}</h3>
+      </div>
+    {% endif %}
+    {% if subtitle %}
+      <p class="text-sm text-slate-500 mb-4">{{ subtitle }}</p>
+    {% endif %}
+    {{ caller() }}
+  </div>
+{%- endmacro %}

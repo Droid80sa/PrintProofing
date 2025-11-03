@@ -1,0 +1,51 @@
+{% extends "base_no_nav.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}My Proofs{% endblock %}
+{% block content %}
+  <section class="space-y-6">
+    <header class="text-center space-y-2">
+      <h1 class="text-3xl font-black text-slate-900">Welcome, {{ customer.name }}</h1>
+      <p class="text-sm text-slate-500">Here are the proofs shared with your organisation.</p>
+    </header>
+
+    {% if proofs %}
+      <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <tr>
+              <th class="px-6 py-3">Job name</th>
+              <th class="px-6 py-3">Designer</th>
+              <th class="px-6 py-3">Status</th>
+              <th class="px-6 py-3">Updated</th>
+              <th class="px-6 py-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200">
+            {% for proof in proofs %}
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-4 text-sm font-medium text-slate-900">{{ proof.job_name }}</td>
+                <td class="px-6 py-4 text-sm text-slate-500">{{ proof.designer.display_name if proof.designer else "—" }}</td>
+                <td class="px-6 py-4 text-sm">
+                  {{ ui.status_badge(proof.status|lower, proof.status.capitalize()) }}
+                </td>
+                <td class="px-6 py-4 text-sm text-slate-500">{{ (proof.updated_at or proof.created_at).strftime('%Y-%m-%d %H:%M') }}</td>
+                <td class="px-6 py-4 text-right text-sm">
+                  <a href="{{ url_for('customer.view_proof', share_id=proof.share_id) }}" class="btn-secondary justify-center">View</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-16 text-center">
+        <p class="text-lg font-semibold text-slate-700">No proofs assigned yet</p>
+        <p class="mt-2 text-sm text-slate-500">Ask your designer to share a proof with you. It will appear here once uploaded.</p>
+      </div>
+    {% endif %}
+
+    <div class="text-center text-sm">
+      <a href="{{ url_for('customer.logout') }}" class="text-slate-500 hover:text-brand-primary">Sign out</a>
+    </div>
+  </section>
+{% endblock %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Edit Disclaimer{% endblock %}
+{% block content %}
+  <section class="mx-auto max-w-3xl space-y-6">
+    <header>
+      <h1 class="text-3xl font-black text-slate-900">Approval disclaimer</h1>
+      <p class="text-sm text-slate-500">Update the message customers see before approving a proof.</p>
+    </header>
+
+    <div class="card">
+      <form method="POST" class="space-y-4">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="space-y-1">
+          <label for="disclaimer_content" class="text-sm font-medium text-slate-700">Disclaimer content</label>
+          <textarea id="disclaimer_content" name="disclaimer" rows="12" class="form-textarea block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">{{ disclaimer }}</textarea>
+        </div>
+        {{ ui.button("Save disclaimer", icon="save", type="submit", extra_classes="justify-center") }}
+      </form>
+    </div>
+  </section>
+{% endblock %}

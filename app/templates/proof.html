@@ -1,0 +1,274 @@
+{% extends "base_no_nav.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}{{ job_name }} – Proof Approval{% endblock %}
+{% block content %}
+  <div class="space-y-6">
+    <a href="javascript:void(0);" onclick="window.history.back()" class="inline-flex items-center gap-2 text-sm font-semibold text-slate-500 hover:text-brand-primary">
+      <span aria-hidden="true" class="material-symbols-outlined text-base">arrow_back</span>
+      Back
+    </a>
+
+    {% if branding.logo_url %}
+      <div class="flex justify-center">
+        <img src="{{ branding.logo_url }}" alt="{{ branding.company_name }} logo" class="h-16 w-auto max-w-[220px] rounded-xl object-contain shadow-card">
+      </div>
+    {% endif %}
+
+    <div class="flex flex-col gap-8 lg:flex-row">
+      <section class="flex-1 space-y-6">
+        <header class="space-y-3">
+          <div class="flex flex-wrap items-center justify-between gap-3">
+            <div>
+              <h1 class="text-3xl font-black text-slate-900">{{ job_name }}</h1>
+              <p class="text-sm text-slate-500">Designer: {{ designer }}</p>
+            </div>
+            {{ ui.status_badge(status) }}
+          </div>
+          {% if customer_portal_banner %}
+            <div class="flex items-start gap-3 rounded-xl border border-sky-200 bg-sky-50 p-4 text-left text-sm text-sky-800">
+              <span class="material-symbols-outlined mt-0.5 text-base">info</span>
+              <div>
+                <strong class="font-semibold">New:</strong> A secure customer portal is now available.
+                <a href="{{ customer_login_url }}" class="font-semibold underline">Sign in</a> for the best experience.
+              </div>
+            </div>
+          {% endif %}
+          {% if notes %}
+            <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-card">
+              <h2 class="text-sm font-semibold text-slate-600 uppercase tracking-wide">Job notes</h2>
+              <p class="mt-2 text-sm text-slate-600 whitespace-pre-line">{{ notes }}</p>
+            </div>
+          {% endif %}
+        </header>
+
+        <div id="proof-media" class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card">
+          {% if proof_file_url %}
+            {% if proof_file_extension in ['.pdf'] %}
+              <iframe src="{{ proof_file_url }}" class="h-[70vh] w-full border-0" title="Proof preview"></iframe>
+            {% elif proof_file_extension in ['.jpg', '.jpeg', '.png'] %}
+              <img src="{{ proof_file_url }}" alt="Proof preview" class="h-full w-full object-contain">
+            {% else %}
+              <div class="flex flex-col items-center gap-4 p-10 text-center">
+                <p class="text-sm font-medium text-amber-600">Preview not available for this file type.</p>
+                {{ ui.button("Download proof", variant="secondary", href=proof_file_url) }}
+              </div>
+            {% endif %}
+          {% else %}
+            <div class="flex flex-col items-center gap-4 p-10 text-center">
+              <p class="text-sm font-medium text-rose-600">Proof file is not available.</p>
+            </div>
+          {% endif %}
+        </div>
+      </section>
+
+      <aside class="w-full space-y-6 lg:w-80">
+        <div class="card space-y-4">
+          <div class="space-y-2">
+            <h2 class="text-lg font-semibold text-slate-900">Proof details</h2>
+            <p class="text-sm text-slate-500">Review the latest version and submit your decision below.</p>
+            <p class="text-sm font-medium text-slate-600">Job: {{ job_name }}</p>
+          </div>
+          {% if version_options|length > 1 %}
+            <div class="space-y-2">
+              <label for="version-select" class="text-sm font-medium text-slate-700">Version</label>
+              <select id="version-select" onchange="switchVersion()" class="form-select block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+                {% for option in version_options %}
+                  <option
+                    value="{{ option.id }}"
+                    data-file-url="{{ option.file_url }}"
+                    data-file-ext="{{ option.file_ext }}"
+                    {% if option.id == latest_version_id %}selected{% endif %}>
+                    Version {{ loop.index }}{% if option.created_at %} · {{ option.created_at.strftime('%Y-%m-%d %H:%M') }}{% endif %}
+                  </option>
+                {% endfor %}
+              </select>
+              <div class="grid grid-cols-1 gap-2 sm:grid-cols-2">
+                {{ ui.button("Compare versions", variant="secondary", href=url_for('compare_versions', job_id=job_id), extra_classes="w-full justify-center") }}
+                {{ ui.button("Add annotations", variant="secondary", href=url_for('annotate_proof', job_id=job_id), extra_classes="w-full justify-center") }}
+              </div>
+            </div>
+          {% endif %}
+        </div>
+
+        <div id="outdatedVersionNotice" class="hidden rounded-xl border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">
+          You&apos;re browsing an earlier version. Switch to the latest version to submit a decision.
+        </div>
+
+        {% if status == "pending" %}
+          <div class="card space-y-4">
+            <div class="space-y-1">
+              <h2 class="text-lg font-semibold text-slate-900">Submit decision</h2>
+              <p class="text-sm text-slate-500">Approve to keep progress moving, or request changes with your feedback.</p>
+            </div>
+            <form id="decisionForm" action="/submit" method="post" class="space-y-4">
+              <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+              <input type="hidden" name="job_id" value="{{ job_id }}">
+              <input type="hidden" name="decision" id="decisionInput" value="">
+              <input type="hidden" name="approver_name" id="approverName" value="">
+
+              <div id="declineFields" class="hidden space-y-3">
+                <div class="space-y-1">
+                  <label for="declineName" class="text-sm font-medium text-slate-700">Your name</label>
+                  <input type="text" id="declineName" name="decline_name" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="Enter your name">
+                </div>
+                <div class="space-y-1">
+                  <label for="client_comment" class="text-sm font-medium text-slate-700">Reason for declining</label>
+                  <textarea id="client_comment" name="client_comment" rows="4" class="form-textarea block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="Optional comment..."></textarea>
+                </div>
+                <button type="button" onclick="submitDecline()" class="btn-primary w-full justify-center bg-brand-reject focus-visible:outline-brand-reject hover:brightness-110">
+                  Send decline response
+                </button>
+              </div>
+
+              <div id="initialButtons" class="flex flex-col gap-3">
+                <button type="button" onclick="showDisclaimer()" class="btn-primary w-full justify-center">
+                  Approve proof
+                </button>
+                <button type="button" onclick="showDecline()" class="btn-secondary w-full justify-center">
+                  Request changes
+                </button>
+              </div>
+            </form>
+          </div>
+        {% else %}
+          <div class="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+            Thank you! No further action is required for this proof.
+          </div>
+        {% endif %}
+      </aside>
+    </div>
+  </div>
+
+  <div id="disclaimerModal" class="fixed inset-0 z-40 hidden items-center justify-center bg-slate-900/50 px-4">
+    <div class="w-full max-w-md rounded-2xl bg-white p-6 shadow-2xl">
+      <div class="space-y-3 text-center">
+        <h3 class="text-lg font-semibold text-slate-900">Approval disclaimer</h3>
+        <p class="text-sm text-slate-600">{{ disclaimer | safe }}</p>
+      </div>
+      <div class="mt-6 space-y-3">
+        <div class="space-y-1 text-left">
+          <label for="clientName" class="text-sm font-medium text-slate-700">Your name</label>
+          <input type="text" id="clientName" placeholder="Enter your name" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+        </div>
+        <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
+          <button onclick="submitDecision()" class="btn-primary justify-center">Accept and approve</button>
+          <button onclick="closeDisclaimer()" class="btn-secondary justify-center">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="loadingOverlay" class="fixed inset-0 z-50 hidden items-center justify-center bg-slate-900/60">
+    <div class="rounded-2xl bg-white px-6 py-4 text-sm font-medium text-slate-700 shadow-xl">
+      Processing your response…
+    </div>
+  </div>
+
+  <script>
+    const latestVersionId = "{{ latest_version_id }}";
+
+    function showDecline() {
+      document.getElementById("decisionInput").value = "declined";
+      document.getElementById("declineFields").classList.remove("hidden");
+      document.getElementById("initialButtons").classList.add("hidden");
+    }
+
+    function showDisclaimer() {
+      document.getElementById("decisionInput").value = "approved";
+      document.getElementById("disclaimerModal").classList.remove("hidden");
+      document.getElementById("disclaimerModal").classList.add("flex");
+    }
+
+    function closeDisclaimer() {
+      document.getElementById("disclaimerModal").classList.add("hidden");
+      document.getElementById("disclaimerModal").classList.remove("flex");
+    }
+
+    function showLoading() {
+      document.getElementById("loadingOverlay").classList.remove("hidden");
+      document.getElementById("loadingOverlay").classList.add("flex");
+    }
+
+    function submitDecision() {
+      const nameInput = document.getElementById("clientName");
+      if (!nameInput.value.trim()) {
+        alert("Please enter your name.");
+        return;
+      }
+      document.getElementById("approverName").value = nameInput.value.trim();
+      closeDisclaimer();
+      showLoading();
+      document.getElementById("decisionForm").submit();
+    }
+
+    function submitDecline() {
+      const declineName = document.getElementById("declineName");
+      if (!declineName.value.trim()) {
+        alert("Please enter your name before declining.");
+        return;
+      }
+      document.getElementById("approverName").value = declineName.value.trim();
+      showLoading();
+      document.getElementById("decisionForm").submit();
+    }
+
+    function renderProofMedia(fileUrl, fileExt) {
+      const container = document.getElementById("proof-media");
+      container.innerHTML = "";
+      if (!fileUrl) {
+        container.innerHTML = '<div class="flex flex-col items-center gap-4 p-10 text-center"><p class="text-sm font-medium text-rose-600">Proof file is not available.</p></div>';
+        return;
+      }
+      if (fileExt === ".pdf") {
+        container.innerHTML = `<iframe src="${fileUrl}" class="h-[70vh] w-full border-0" title="Proof preview"></iframe>`;
+      } else if ([".jpg", ".jpeg", ".png", ".gif", ".webp"].includes(fileExt)) {
+        container.innerHTML = `<img src="${fileUrl}" alt="Proof preview" class="h-full w-full object-contain">`;
+      } else {
+        container.innerHTML = `
+          <div class="flex flex-col items-center gap-4 p-10 text-center">
+            <p class="text-sm font-medium text-amber-600">Preview not available for this file type.</p>
+            <a href="${fileUrl}" class="btn-secondary">Download proof</a>
+          </div>`;
+      }
+    }
+
+    function toggleDecisionState(enabled) {
+      const decisionForm = document.getElementById("decisionForm");
+      const initialButtons = document.getElementById("initialButtons");
+      const declineFields = document.getElementById("declineFields");
+      const notice = document.getElementById("outdatedVersionNotice");
+      if (!decisionForm) return;
+
+      if (enabled) {
+        decisionForm.classList.remove("hidden");
+        initialButtons?.classList.remove("hidden");
+        declineFields?.classList.add("hidden");
+        notice?.classList.add("hidden");
+      } else {
+        decisionForm.classList.add("hidden");
+        initialButtons?.classList.add("hidden");
+        declineFields?.classList.add("hidden");
+        notice?.classList.remove("hidden");
+      }
+    }
+
+    function switchVersion() {
+      const select = document.getElementById("version-select");
+      if (!select) return;
+      const option = select.options[select.selectedIndex];
+      const fileUrl = option.dataset.fileUrl;
+      const fileExt = option.dataset.fileExt;
+      renderProofMedia(fileUrl, fileExt);
+      toggleDecisionState(option.value === latestVersionId);
+    }
+
+    window.addEventListener("DOMContentLoaded", () => {
+      const select = document.getElementById("version-select");
+      if (select) {
+        switchVersion();
+      } else {
+        toggleDecisionState(true);
+      }
+    });
+  </script>
+{% endblock %}

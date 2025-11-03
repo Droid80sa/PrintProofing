@@ -1,0 +1,47 @@
+{% extends "base_no_nav.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Check Proof Status – {{ branding.company_name }}{% endblock %}
+{% block content %}
+  <section class="mx-auto max-w-3xl space-y-8">
+    <header class="space-y-3 text-center">
+      <h1 class="text-3xl font-black text-slate-900">Check proof status</h1>
+      <p class="text-sm text-slate-500">Paste the proof link or enter the job name/ID to see where things stand.</p>
+    </header>
+
+    <div class="card">
+      <form method="post" class="space-y-4 text-left">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="space-y-2">
+          <label for="proof_url" class="text-sm font-medium text-slate-700">Proof link or job ID</label>
+          <input type="text" id="proof_url" name="proof_url" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="https://… or job code" value="{{ request.form.proof_url or '' }}">
+        </div>
+        {{ ui.button("Check status", type="submit", extra_classes="w-full sm:w-auto justify-center") }}
+      </form>
+    </div>
+
+    {% if error %}
+      <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">{{ error }}</div>
+    {% endif %}
+
+    {% if status %}
+      <div class="card space-y-4">
+        <div class="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 class="text-xl font-semibold text-slate-900">{{ job_name or 'Unnamed job' }}</h2>
+            <p class="text-sm text-slate-500">Job ID: {{ job_id }}</p>
+          </div>
+          {{ ui.status_badge(status|lower, status|capitalize) }}
+        </div>
+        {% if designer %}
+          <p class="text-sm text-slate-500">Designer: {{ designer }}</p>
+        {% endif %}
+        {% if comment %}
+          <div class="rounded-lg border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-600">{{ comment }}</div>
+        {% endif %}
+        {% if link %}
+          <a href="{{ link }}" class="btn-primary justify-center" target="_blank" rel="noopener">Open proof</a>
+        {% endif %}
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

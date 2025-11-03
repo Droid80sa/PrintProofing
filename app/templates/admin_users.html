@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Manage Users – {{ branding.company_name }}{% endblock %}
+{% block content %}
+  <section class="space-y-8">
+    <header>
+      <h1 class="text-3xl font-black text-slate-900">User management</h1>
+      <p class="text-sm text-slate-500">Create admins/designers and maintain SMTP settings for notifications.</p>
+    </header>
+
+    <div class="card">
+      <h2 class="text-lg font-semibold text-slate-900">Create user</h2>
+      <form method="post" action="{{ url_for('admin.admin_users') }}" class="mt-4 grid gap-4 sm:grid-cols-2">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="action" value="create">
+        <div class="space-y-1">
+          <label for="admin-user-email" class="text-sm font-medium text-slate-700">Email</label>
+          <input type="email" id="admin-user-email" name="email" required class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+        </div>
+        <div class="space-y-1">
+          <label for="admin-user-name" class="text-sm font-medium text-slate-700">Name</label>
+          <input type="text" id="admin-user-name" name="name" required class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+        </div>
+        <div class="space-y-1">
+          <label for="admin-user-password" class="text-sm font-medium text-slate-700">Password</label>
+          <input type="password" id="admin-user-password" name="password" required class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+        </div>
+        <div class="space-y-1">
+          <label for="admin-user-role" class="text-sm font-medium text-slate-700">Role</label>
+          <select id="admin-user-role" name="role" class="form-select block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+            <option value="admin">Admin</option>
+            <option value="designer">Designer</option>
+          </select>
+        </div>
+        <div class="space-y-1">
+          <label for="admin-user-display" class="text-sm font-medium text-slate-700">Designer display name</label>
+          <input type="text" id="admin-user-display" name="designer_display_name" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+          <p class="text-xs text-slate-400">Only used when creating designers.</p>
+        </div>
+        <div class="space-y-1">
+          <label for="admin-user-reply" class="text-sm font-medium text-slate-700">Designer reply-to email</label>
+          <input type="email" id="admin-user-reply" name="designer_reply_to" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+        </div>
+        {{ ui.button("Create user", type="submit", extra_classes="sm:col-span-2 justify-center") }}
+      </form>
+    </div>
+
+    <div class="card">
+      <h2 class="text-lg font-semibold text-slate-900">Existing users</h2>
+      {% if users %}
+        <div class="mt-4 overflow-hidden rounded-xl border border-slate-200">
+          <div class="max-h-[28rem] overflow-y-auto">
+            <table class="min-w-full divide-y divide-slate-200">
+              <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+                <tr>
+                  <th class="px-4 py-3">Email</th>
+                  <th class="px-4 py-3">Name</th>
+                  <th class="px-4 py-3">Role</th>
+                  <th class="px-4 py-3">Status</th>
+                  <th class="px-4 py-3">SMTP</th>
+                  <th class="px-4 py-3">Updated</th>
+                  <th class="px-4 py-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-200 text-sm">
+                {% for user in users %}
+                  <tr class="hover:bg-slate-50">
+                    <td class="px-4 py-3 text-slate-600">{{ user.email }}</td>
+                    <td class="px-4 py-3 text-slate-600">{{ user.name }}</td>
+                    <td class="px-4 py-3 text-slate-600">{{ user.role|capitalize }}</td>
+                    <td class="px-4 py-3 text-slate-600">{{ 'Active' if user.is_active else 'Inactive' }}</td>
+                    <td class="px-4 py-3">
+                      {% set has_config = user.smtp_host and user.smtp_port %}
+                      {% set last_test_display = user.smtp_last_test_at.strftime('%Y-%m-%d %H:%M UTC') if user.smtp_last_test_at else '' %}
+                      {% if not has_config %}
+                        <span class="inline-flex items-center rounded-full bg-amber-100 px-2.5 py-0.5 text-xs font-semibold text-amber-700">Not configured</span>
+                      {% elif user.smtp_last_test_status == 'failed' %}
+                        <span class="inline-flex items-center rounded-full bg-rose-100 px-2.5 py-0.5 text-xs font-semibold text-rose-700" {% if last_test_display %}title="Failed {{ last_test_display }}"{% endif %}>Failed</span>
+                      {% elif user.smtp_last_test_status == 'success' %}
+                        <span class="inline-flex items-center rounded-full bg-emerald-100 px-2.5 py-0.5 text-xs font-semibold text-emerald-700" {% if last_test_display %}title="Tested {{ last_test_display }}"{% endif %}>OK</span>
+                      {% else %}
+                        <span class="inline-flex items-center rounded-full bg-sky-100 px-2.5 py-0.5 text-xs font-semibold text-sky-700">Not tested</span>
+                      {% endif %}
+                    </td>
+                    <td class="px-4 py-3 text-slate-600">{{ user.updated_at or user.created_at }}</td>
+                    <td class="px-4 py-3 text-right text-slate-600">
+                      <div class="flex flex-col gap-2">
+                        <a href="{{ url_for('admin.admin_user_edit', user_id=user.id) }}" class="btn-secondary justify-center">Edit</a>
+                        <form method="post" action="{{ url_for('admin.admin_users') }}" class="flex gap-2">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                          <input type="hidden" name="action" value="toggle">
+                          <input type="hidden" name="user_id" value="{{ user.id }}">
+                          <button type="submit" class="btn-secondary flex-1 justify-center">{{ 'Deactivate' if user.is_active else 'Activate' }}</button>
+                        </form>
+                        <form method="post" action="{{ url_for('admin.admin_users') }}" class="space-y-2" onsubmit="return confirm('Reset password for {{ user.email }}?');">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                          <input type="hidden" name="action" value="reset_password">
+                          <input type="hidden" name="user_id" value="{{ user.id }}">
+                          <input type="password" name="new_password" placeholder="New password" required class="form-input w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+                          <button type="submit" class="btn-secondary w-full justify-center">Reset password</button>
+                        </form>
+                        <form method="post" action="{{ url_for('admin.admin_users') }}" class="space-y-2">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                          <input type="hidden" name="action" value="update_role">
+                          <input type="hidden" name="user_id" value="{{ user.id }}">
+                          <select name="role" class="form-select w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+                            <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+                            <option value="designer" {% if user.role == 'designer' %}selected{% endif %}>Designer</option>
+                          </select>
+                          <button type="submit" class="btn-secondary w-full justify-center">Update role</button>
+                        </form>
+                        <form method="post" action="{{ url_for('admin.admin_users') }}" onsubmit="return confirm('Delete {{ user.email }}? This cannot be undone.');">
+                          <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                          <input type="hidden" name="action" value="delete">
+                          <input type="hidden" name="user_id" value="{{ user.id }}">
+                          <button type="submit" class="btn-secondary w-full justify-center text-rose-600">Delete</button>
+                        </form>
+                      </div>
+                    </td>
+                  </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      {% else %}
+        <p class="mt-4 text-sm text-slate-500">No users found.</p>
+      {% endif %}
+    </div>
+  </section>
+{% endblock %}

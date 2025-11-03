@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Proof Approval - Project Alpha</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined" rel="stylesheet"/>
+<script>
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            colors: {
+              "primary": "#007BFF",
+              "background-light": "#f6f6f8",
+              "background-dark": "#111621",
+            },
+            fontFamily: {
+              "display": ["Inter", "sans-serif"]
+            },
+            borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+          },
+        },
+      }
+    </script>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="font-display">
+<div class="relative flex h-auto min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-gray-200 dark:border-gray-700 px-6 sm:px-10 py-3 bg-white dark:bg-background-dark">
+<div class="flex items-center gap-4 text-gray-900 dark:text-white">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path clip-rule="evenodd" d="M39.475 21.6262C40.358 21.4363 40.6863 21.5589 40.7581 21.5934C40.7876 21.655 40.8547 21.857 40.8082 22.3336C40.7408 23.0255 40.4502 24.0046 39.8572 25.2301C38.6799 27.6631 36.5085 30.6631 33.5858 33.5858C30.6631 36.5085 27.6632 38.6799 25.2301 39.8572C24.0046 40.4502 23.0255 40.7407 22.3336 40.8082C21.8571 40.8547 21.6551 40.7875 21.5934 40.7581C21.5589 40.6863 21.4363 40.358 21.6262 39.475C21.8562 38.4054 22.4689 36.9657 23.5038 35.2817C24.7575 33.2417 26.5497 30.9744 28.7621 28.762C30.9744 26.5497 33.2417 24.7574 35.2817 23.5037C36.9657 22.4689 38.4054 21.8562 39.475 21.6262ZM4.41189 29.2403L18.7597 43.5881C19.8813 44.7097 21.4027 44.9179 22.7217 44.7893C24.0585 44.659 25.5148 44.1631 26.9723 43.4579C29.9052 42.0387 33.2618 39.5667 36.4142 36.4142C39.5667 33.2618 42.0387 29.9052 43.4579 26.9723C44.1631 25.5148 44.659 24.0585 44.7893 22.7217C44.9179 21.4027 44.7097 19.8813 43.5881 18.7597L29.2403 4.41187C27.8527 3.02428 25.8765 3.02573 24.2861 3.36776C22.6081 3.72863 20.7334 4.58419 18.8396 5.74801C16.4978 7.18716 13.9881 9.18353 11.5858 11.5858C9.18354 13.988 7.18717 16.4978 5.74802 18.8396C4.58421 20.7334 3.72865 22.6081 3.36778 24.2861C3.02574 25.8765 3.02429 27.8527 4.41189 29.2403Z" fill="currentColor" fill-rule="evenodd"></path>
+</svg>
+</div>
+<h2 class="text-gray-900 dark:text-white text-lg font-bold leading-tight tracking-[-0.015em]">ProofApproval</h2>
+</div>
+</header>
+<main class="flex flex-col flex-1 px-4 sm:px-6 lg:px-8 py-8">
+<div class="max-w-7xl mx-auto w-full">
+<div class="flex flex-wrap gap-2 mb-4">
+<a class="text-primary text-sm font-medium leading-normal" href="#">All Jobs</a>
+<span class="text-gray-500 dark:text-gray-400 text-sm font-medium leading-normal">/</span>
+<span class="text-gray-900 dark:text-white text-sm font-medium leading-normal">Project Alpha - Website Mockups</span>
+</div>
+<div class="flex flex-wrap items-start justify-between gap-4 mb-6">
+<div class="flex min-w-72 flex-col gap-2">
+<p class="text-gray-900 dark:text-white text-3xl font-black leading-tight tracking-[-0.033em]">Project Alpha - Website Mockups</p>
+<div class="flex items-center gap-2">
+<span class="inline-flex items-center rounded-full bg-[#FFC107]/20 px-3 py-1 text-xs font-bold text-[#FFC107]">Pending Approval</span>
+</div>
+</div>
+</div>
+<div class="mb-6 @container">
+<div class="flex flex-1 flex-col items-start justify-between gap-4 rounded-lg border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-5 @[480px]:flex-row @[480px]:items-center">
+<div class="flex flex-col gap-1">
+<p class="text-gray-900 dark:text-white text-base font-bold leading-tight">Get the full experience.</p>
+<p class="text-gray-600 dark:text-gray-300 text-sm font-normal leading-normal">Log in or create an account to track all your proofs in one place.</p>
+</div>
+<button class="text-sm font-bold leading-normal tracking-[0.015em] flex items-center gap-2 text-gray-700 dark:text-gray-200 hover:text-gray-900 dark:hover:text-white">Dismiss</button>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+<div class="lg:col-span-2">
+<div class="w-full bg-gray-100 dark:bg-gray-800 rounded-xl border border-gray-200 dark:border-gray-700 aspect-[4/3] flex items-center justify-center p-4">
+<div class="w-full h-full bg-center bg-no-repeat bg-contain" data-alt="Website mockup for Project Alpha homepage" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuDXgUZIMKSSkk0ubWboy_1LZ7i0A7e0LOBdA9j3ZULskxLYVAkAyn-YC3ZYle9HQ7N0KrW141L2JXdIDYehb7OARf7H0eR9FeeElktQ4d3m-aA00MQvv3lnhgCuH9aJMq1_90UYFT4mtNVdG7-R7m4FD92OnJqJFQPL0MyTcdRw_9iS1tn8zDq9TshG_SIH4a12cy__cxH7-hJI0g_inHTjkM26VPXXm22SLv0i3Py4dTTPriDCFq4mqkBabdn--paXHJ9Bht5iiwqn");'></div>
+</div>
+</div>
+<aside class="flex flex-col gap-6">
+<div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700">
+<div class="flex items-center gap-4">
+<img alt="Jane Doe's avatar" class="w-12 h-12 rounded-full" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAbVpnXtL8nzHTA0dTDVNKHtwJEbK4NJ0TeuJF3RE8ZuT2NZK2rGuzTNjETDsEgVgVloTD8zrnNQY7SXiEUp-yiuKmkGOa7PkDC9aYMNKS1Rb09UVHLyMvKeBkRkgkEmyIydWvUk0Kfplk3WabkMJS-MwiTgG2oB8touSccOzJvrUJFUppWrJ7RVuXzny2bn_aGmyieC1FSBSu9u6FMYBq3MG30P3MnjoBS0-k4GcujM48HBjOs67ySkidQ8pHdYhP-Ku-4TYn4bnEF"/>
+<div class="flex flex-col">
+<p class="text-sm font-semibold text-gray-900 dark:text-white">Submitted by: Jane Doe</p>
+<p class="text-xs text-gray-500 dark:text-gray-400">Uploaded on: Oct 26, 2023</p>
+</div>
+</div>
+<div class="mt-4">
+<label class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1" for="version-select">Version</label>
+<select class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" id="version-select">
+<option>Version 3 (Latest)</option>
+<option>Version 2</option>
+<option>Version 1</option>
+</select>
+</div>
+<div class="mt-4 flex flex-col sm:flex-row gap-2">
+<button class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-md">
+<span class="material-symbols-outlined text-base">compare_arrows</span>
+                                        Compare Versions
+                                    </button>
+<button class="flex-1 inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-semibold text-gray-700 dark:text-gray-200 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 border border-gray-300 dark:border-gray-600 rounded-md">
+<span class="material-symbols-outlined text-base">edit</span>
+                                        Annotate Proof
+                                    </button>
+</div>
+</div>
+<div class="bg-white dark:bg-gray-800 p-5 rounded-xl border border-gray-200 dark:border-gray-700">
+<h3 class="text-lg font-bold text-gray-900 dark:text-white mb-4">Make a Decision</h3>
+<form action="#" class="space-y-4" method="POST">
+<fieldset class="space-y-3">
+<div class="relative flex items-start">
+<div class="flex h-6 items-center">
+<input class="h-4 w-4 border-gray-300 text-primary focus:ring-primary" id="approve" name="decision" type="radio"/>
+</div>
+<div class="ml-3 text-sm leading-6">
+<label class="font-medium text-gray-900 dark:text-white" for="approve">Approve this proof</label>
+</div>
+</div>
+<div class="relative flex items-start">
+<div class="flex h-6 items-center">
+<input class="h-4 w-4 border-gray-300 text-red-600 focus:ring-red-600" id="reject" name="decision" type="radio"/>
+</div>
+<div class="ml-3 text-sm leading-6">
+<label class="font-medium text-gray-900 dark:text-white" for="reject">Reject with changes</label>
+</div>
+</div>
+</fieldset>
+<div>
+<label class="sr-only" for="comments">Comments</label>
+<textarea class="block w-full rounded-md border-gray-300 dark:border-gray-600 dark:bg-gray-700 dark:text-white shadow-sm focus:border-primary focus:ring-primary sm:text-sm" id="comments" name="comments" placeholder="Please provide specific feedback for the requested changes." rows="4"></textarea>
+</div>
+<button class="w-full inline-flex justify-center rounded-md bg-primary px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:bg-gray-300 disabled:cursor-not-allowed dark:disabled:bg-gray-600" type="submit">
+                                        Submit Decision
+                                    </button>
+</form>
+</div>
+</aside>
+</div>
+</div>
+</main>
+</div>
+<!-- Modal -->
+<div aria-labelledby="modal-title" aria-modal="true" class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity flex items-center justify-center p-4" id="confirmation-modal" role="dialog">
+<div class="relative transform overflow-hidden rounded-lg bg-white dark:bg-gray-800 text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+<div class="bg-white dark:bg-gray-800 px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
+<div class="sm:flex sm:items-start">
+<div class="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 dark:bg-blue-900 sm:mx-0 sm:h-10 sm:w-10">
+<span class="material-symbols-outlined text-primary">task_alt</span>
+</div>
+<div class="mt-3 text-center sm:ml-4 sm:mt-0 sm:text-left">
+<h3 class="text-base font-semibold leading-6 text-gray-900 dark:text-white" id="modal-title">Final Confirmation</h3>
+<div class="mt-2">
+<p class="text-sm text-gray-500 dark:text-gray-300">By clicking 'Confirm', you are providing final approval for this proof. This action is irreversible and authorizes our team to proceed to the next stage of production.</p>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-gray-50 dark:bg-gray-800/50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6">
+<button class="inline-flex w-full justify-center rounded-md bg-primary px-3 py-2 text-sm font-semibold text-white shadow-sm hover:bg-primary/90 sm:ml-3 sm:w-auto" type="button">Confirm</button>
+<button class="mt-3 inline-flex w-full justify-center rounded-md bg-white dark:bg-gray-700 px-3 py-2 text-sm font-semibold text-gray-900 dark:text-white shadow-sm ring-1 ring-inset ring-gray-300 dark:ring-gray-600 hover:bg-gray-50 dark:hover:bg-gray-600 sm:mt-0 sm:w-auto" type="button">Cancel</button>
+</div>
+</div>
+</div>
+</div>
+</body></html>

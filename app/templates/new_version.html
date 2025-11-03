@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Upload New Version – {{ branding.company_name }}{% endblock %}
+{% block content %}
+  <section class="mx-auto max-w-3xl space-y-6">
+    <header class="space-y-2 text-center">
+      <h1 class="text-3xl font-black text-slate-900">Upload new version</h1>
+      <p class="text-sm text-slate-500">Attach the latest file for <strong>{{ proof.job_name }}</strong> and keep the project moving.</p>
+    </header>
+
+    <div class="card">
+      <form method="post" enctype="multipart/form-data" id="uploadForm" action="{{ url_for('new_version', job_id=proof.share_id) }}" class="space-y-4">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="space-y-1">
+          <label for="notes" class="text-sm font-medium text-slate-700">Optional notes</label>
+          <textarea id="notes" name="notes" rows="4" class="form-textarea block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="Add any relevant details or instructions for this version."></textarea>
+        </div>
+
+        <div class="space-y-1">
+          <label for="file-upload" class="text-sm font-medium text-slate-700">Select PDF or image</label>
+          <input type="file" id="file-upload" name="file" accept=".pdf,.jpg,.jpeg,.png" required class="block w-full rounded-lg border border-dashed border-slate-300 px-4 py-10 text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:brightness-110">
+          <p class="text-xs text-slate-400">Accepted formats: PDF, JPG, JPEG, PNG.</p>
+        </div>
+
+        <div id="uploadProgressWrapper" class="hidden items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3" role="status">
+          <progress id="uploadProgress" value="0" max="100" class="h-2 w-full rounded-full bg-slate-200"></progress>
+          <span id="uploadProgressLabel" class="text-xs font-medium text-slate-600">Preparing upload…</span>
+        </div>
+
+        <button type="submit" class="btn-primary w-full justify-center" id="uploadSubmit">
+          <span class="material-symbols-outlined text-base">upload</span>
+          Upload new version
+        </button>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const form = document.getElementById('uploadForm');
+      if (!form || !window.XMLHttpRequest) {
+        return;
+      }
+      const fileInput = document.getElementById('file-upload');
+      const progressWrapper = document.getElementById('uploadProgressWrapper');
+      const progressBar = document.getElementById('uploadProgress');
+      const progressLabel = document.getElementById('uploadProgressLabel');
+      const submitButton = document.getElementById('uploadSubmit');
+
+      form.addEventListener('submit', function (evt) {
+        if (!fileInput.files.length) {
+          return;
+        }
+        evt.preventDefault();
+
+        const formData = new FormData(form);
+        const xhr = new XMLHttpRequest();
+
+        progressWrapper.classList.remove('hidden');
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="material-symbols-outlined text-base">hourglass_top</span> Uploading…';
+
+        xhr.upload.addEventListener('progress', function (event) {
+          if (!event.lengthComputable) {
+            return;
+          }
+          const percent = Math.round((event.loaded / event.total) * 100);
+          progressBar.value = percent;
+          progressLabel.textContent = percent >= 100 ? 'Processing server response…' : `Uploading ${percent}%`;
+        });
+
+        xhr.addEventListener('load', function () {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            document.open();
+            document.write(xhr.responseText);
+            document.close();
+          } else {
+            progressLabel.textContent = 'Upload failed. Please try again.';
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<span class="material-symbols-outlined text-base">upload</span> Upload new version';
+          }
+        });
+
+        xhr.addEventListener('error', function () {
+          progressLabel.textContent = 'Network error. Please retry.';
+          submitButton.disabled = false;
+          submitButton.innerHTML = '<span class="material-symbols-outlined text-base">upload</span> Upload new version';
+        });
+
+        xhr.open('POST', form.action, true);
+        xhr.setRequestHeader('Accept', 'text/html');
+        xhr.send(formData);
+      });
+    })();
+  </script>
+{% endblock %}

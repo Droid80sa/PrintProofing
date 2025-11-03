@@ -1,0 +1,11 @@
+{
+  "company_name": "Hot Ink",
+  "primary_color": "#2b39fd",
+  "background_color": "#c5c4c4",
+  "approve_button_color": "#11980e",
+  "reject_button_color": "#a92834",
+  "general_button_color": "#0056d6",
+  "font_family": "Roboto, sans-serif",
+  "email_footer": "Printed with care by Hot Ink. Visit us at https://www.hotink.co.za",
+  "logo_url": "/static/uploads/logo.png"
+}

@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Admin – Email Template{% endblock %}
+{% block content %}
+  <section class="mx-auto max-w-4xl space-y-6">
+    <header class="space-y-2">
+      <h1 class="text-3xl font-black text-slate-900">Customer email template</h1>
+      <p class="text-sm text-slate-500">Update the default approval notification without editing environment files.</p>
+    </header>
+
+    <div class="card">
+      <form id="notification-template-form" method="POST" class="space-y-6">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="body_template" id="body-template-field">
+
+        <div class="space-y-1">
+          <label for="subject-template" class="text-sm font-medium text-slate-700">Email subject</label>
+          <input
+            type="text"
+            id="subject-template"
+            name="subject_template"
+            value="{{ subject_template }}"
+            maxlength="255"
+            required
+            class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary"
+          >
+        </div>
+
+        <div class="space-y-2">
+          <div class="flex items-center justify-between">
+            <label for="body-editor" class="text-sm font-medium text-slate-700">Email body</label>
+            {% if using_custom_template %}
+              <span class="inline-flex items-center gap-1 text-xs font-medium text-emerald-600">
+                <span class="material-symbols-outlined text-base">check_circle</span>
+                Custom template active
+              </span>
+            {% else %}
+              <span class="text-xs font-medium text-slate-500">Currently using environment defaults</span>
+            {% endif %}
+          </div>
+          <div
+            id="body-editor"
+            class="min-h-[240px] rounded-lg border border-slate-300 bg-white px-4 py-3 text-sm leading-relaxed shadow-inner focus-within:border-brand-primary focus-within:ring-2 focus-within:ring-brand-primary/40"
+            contenteditable="true"
+            data-placeholder="Click to start typing or paste HTML"
+          >{{ body_template|safe }}</div>
+          <p class="text-xs text-slate-500">Formatting shortcuts work here (Cmd/Ctrl + B for bold, + I for italics). HTML markup is preserved.</p>
+        </div>
+
+        <div class="space-y-2">
+          <p class="text-xs font-semibold uppercase tracking-wide text-slate-500">Supported placeholders</p>
+          <div class="flex flex-wrap gap-2">
+            {% for token in placeholder_tokens %}
+              <code class="rounded-md bg-slate-100 px-2 py-1 text-xs font-mono text-slate-700">{{ token }}</code>
+            {% endfor %}
+          </div>
+          <p class="text-xs text-slate-500">Missing values are stripped automatically. Use <code class="font-mono text-rose-500">{{ '{{invite_link}}' }}</code> inside HTML to embed the portal link.</p>
+        </div>
+
+        <div class="grid gap-4 rounded-lg border border-slate-200 bg-slate-50 p-4 text-xs text-slate-600 md:grid-cols-2">
+          <div>
+            <h2 class="mb-1 text-sm font-semibold text-slate-700">Factory defaults</h2>
+            <p class="font-semibold">Subject:</p>
+            <p class="mb-2">{{ default_subject }}</p>
+            <p class="font-semibold">Body:</p>
+            <pre class="whitespace-pre-wrap text-xs">{{ default_body }}</pre>
+          </div>
+          <div class="space-y-2">
+            <h2 class="text-sm font-semibold text-slate-700">Tips</h2>
+            <ul class="list-disc space-y-1 pl-5">
+              <li>Keep important details above the fold; mobile clients collapse long content.</li>
+              <li>Add a branded footer in <code class="font-mono text-rose-500">admin → branding</code> for legal copy.</li>
+              <li>Reset to defaults if environment variables were changed or removed.</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-3">
+          {{ ui.button("Save template", icon="save", type="submit", extra_classes="justify-center") }}
+          {{ ui.button("Reset to defaults", icon="restart_alt", type="submit", variant="secondary", extra_classes="justify-center", size="md") | replace('type="submit"', 'type="submit" name="action" value="reset"')|safe }}
+        </div>
+      </form>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const form = document.getElementById("notification-template-form");
+      const editor = document.getElementById("body-editor");
+      const field = document.getElementById("body-template-field");
+      if (!form || !editor || !field) {
+        return;
+      }
+
+      const syncField = () => {
+        field.value = editor.innerHTML.trim();
+      };
+
+      if (!field.value) {
+        syncField();
+      }
+
+      form.addEventListener("submit", syncField);
+
+      editor.addEventListener("focus", () => {
+        if (!editor.textContent.trim()) {
+          editor.innerHTML = "";
+        }
+      });
+    })();
+  </script>
+{% endblock %}

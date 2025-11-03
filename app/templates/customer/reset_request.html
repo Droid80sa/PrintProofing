@@ -1,0 +1,25 @@
+{% extends "base_no_nav.html" %}
+{% block title %}Reset Password{% endblock %}
+{% block content %}
+  <section class="mx-auto flex w-full max-w-3xl flex-col items-center gap-8 text-center">
+    <div class="space-y-2">
+      <h1 class="text-3xl font-black text-slate-900">Reset your password</h1>
+      <p class="text-base text-slate-500">Enter your email and we&apos;ll send a reset link if your account exists.</p>
+    </div>
+
+    <div class="w-full max-w-md rounded-2xl border border-slate-200 bg-white p-8 shadow-card">
+      <form method="post" class="space-y-6 text-left">
+        <input type="hidden" name="csrf_token" value="{{ customer_csrf_token }}">
+        <div class="space-y-2">
+          <label for="email" class="text-sm font-medium text-slate-700">Email address</label>
+          <input type="email" id="email" name="email" required autofocus class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="name@example.com">
+        </div>
+        <button type="submit" class="btn-primary w-full justify-center">Send reset link</button>
+      </form>
+      <p class="mt-6 text-sm text-slate-500 text-center">
+        Remembered your password?
+        <a href="{{ url_for('customer.login') }}" class="font-semibold text-brand-primary hover:underline">Back to login</a>
+      </p>
+    </div>
+  </section>
+{% endblock %}

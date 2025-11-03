@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Export Data – {{ branding.company_name }}{% endblock %}
+{% block content %}
+  <section class="mx-auto max-w-2xl space-y-6 text-center">
+    <h1 class="text-3xl font-black text-slate-900">Export proof data</h1>
+    <p class="text-sm text-slate-500">Download a CSV of all proofs, designers, and approval statuses for external reporting.</p>
+    <div class="flex justify-center">
+      {{ ui.button("Download CSV", icon="download", href=url_for('admin.export_csv'), extra_classes="justify-center") }}
+    </div>
+  </section>
+{% endblock %}

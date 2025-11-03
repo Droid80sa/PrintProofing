@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Admin Dashboard{% endblock %}
+{% block content %}
+  <section class="space-y-8">
+    {% if branding.logo_url %}
+      <div class="flex justify-center">
+        <img src="{{ branding.logo_url }}" alt="{{ branding.company_name }} logo" class="h-20 w-auto max-w-[260px] rounded-xl object-contain shadow-card">
+      </div>
+    {% endif %}
+
+    <header class="flex flex-col gap-2 text-center">
+      <h1 class="text-3xl font-black text-slate-900">Admin dashboard</h1>
+      <p class="text-sm text-slate-500">Monitor proofs, see who&apos;s waiting, and keep work moving.</p>
+    </header>
+
+    <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
+      <div class="card text-center">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total proofs</h3>
+        <p class="mt-2 text-3xl font-bold text-slate-900">{{ counts.total }}</p>
+      </div>
+      <div class="card text-center">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Awaiting approval</h3>
+        <p class="mt-2 text-3xl font-bold text-amber-600">{{ counts.pending }}</p>
+      </div>
+      <div class="card text-center">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Approved</h3>
+        <p class="mt-2 text-3xl font-bold text-emerald-600">{{ counts.approved }}</p>
+      </div>
+      <div class="card text-center">
+        <h3 class="text-xs font-semibold uppercase tracking-wider text-slate-500">Declined</h3>
+        <p class="mt-2 text-3xl font-bold text-rose-600">{{ counts.declined }}</p>
+      </div>
+    </div>
+
+    <div class="card space-y-4">
+      <div class="grid gap-4 sm:grid-cols-[2fr,1fr]">
+        <input type="search" id="dashboardSearch" placeholder="Search by job, designer, or email…" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+        <select id="dashboardStatusFilter" class="form-select block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+          <option value="all" selected>All statuses</option>
+          <option value="approved">Approved</option>
+          <option value="pending">Pending</option>
+          <option value="declined">Declined</option>
+        </select>
+      </div>
+      <div class="overflow-hidden rounded-xl border border-slate-200">
+        <div class="max-h-96 overflow-y-auto">
+          <table class="min-w-full divide-y divide-slate-200">
+            <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+              <tr>
+                <th class="px-6 py-3">Job ID</th>
+                <th class="px-6 py-3">Job name</th>
+                <th class="px-6 py-3">Designer</th>
+                <th class="px-6 py-3">Last updated</th>
+                <th class="px-6 py-3">Status</th>
+                <th class="px-6 py-3">Last action</th>
+                <th class="px-6 py-3 text-right">Actions</th>
+              </tr>
+            </thead>
+            <tbody class="divide-y divide-slate-200" id="dashboardRows">
+              {% for job in jobs %}
+                <tr class="hover:bg-slate-50" data-status="{{ job.status|lower }}" data-designer="{{ job.designer|lower }}" data-email="{{ job.designer_email|lower }}" data-job="{{ job.job_name|lower }}">
+                  <td class="px-6 py-4 text-sm text-slate-500">{{ job.job_id }}</td>
+                  <td class="px-6 py-4 text-sm font-medium text-slate-900">
+                    {{ job.job_name }}
+                    {% if job.latest_file_name %}<br><span class="text-xs text-slate-400">{{ job.latest_file_name }}</span>{% endif %}
+                  </td>
+                  <td class="px-6 py-4 text-sm text-slate-500">
+                    {{ job.designer }}<br>
+                    <span class="text-xs text-slate-400">{{ job.designer_email }}</span>
+                  </td>
+                  <td class="px-6 py-4 text-sm text-slate-500">
+                    {{ job.updated_at_display }}
+                    {% if job.created_at_display %}<br><span class="text-xs text-slate-400">Created {{ job.created_at_display }}</span>{% endif %}
+                  </td>
+                  <td class="px-6 py-4 text-sm">
+                    {{ ui.status_badge(job.status|lower, job.status.capitalize()) }}
+                  </td>
+                  <td class="px-6 py-4 text-sm text-slate-500">
+                    {{ job.approver_name if job.approver_name else '—' }}
+                    {% if job.decision_timestamp_display %}<br><span class="text-xs text-slate-400">{{ job.decision_timestamp_display }}</span>{% endif %}
+                    {% if job.client_comment %}<br><span class="text-xs text-slate-400">“{{ job.client_comment }}”</span>{% endif %}
+                  </td>
+                  <td class="px-6 py-4 text-right text-sm">
+                    <div class="flex flex-wrap justify-end gap-2">
+                      <a href="{{ job.link }}" class="btn-secondary justify-center">View proof</a>
+                      <a href="{{ url_for('new_version', job_id=job.job_id) }}" class="btn-secondary justify-center">New version</a>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <a href="{{ url_for('admin.export_csv') }}" class="btn-primary justify-center">Download CSV export</a>
+    </div>
+  </section>
+
+  <script>
+    (function () {
+      const searchInput = document.getElementById('dashboardSearch');
+      const statusFilter = document.getElementById('dashboardStatusFilter');
+      const rows = Array.from(document.querySelectorAll('#dashboardRows tr'));
+
+      function applyFilters() {
+        const query = (searchInput.value || '').trim().toLowerCase();
+        const status = statusFilter.value;
+
+        rows.forEach((row) => {
+          const matchesStatus = status === 'all' || row.dataset.status === status;
+          const haystack = [row.dataset.job, row.dataset.designer, row.dataset.email].join(' ');
+          const matchesSearch = !query || haystack.includes(query);
+          row.style.display = matchesStatus && matchesSearch ? '' : 'none';
+        });
+      }
+
+      searchInput?.addEventListener('input', applyFilters);
+      statusFilter?.addEventListener('change', applyFilters);
+    })();
+  </script>
+{% endblock %}

@@ -1,0 +1,106 @@
+{% extends "base.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Manage Customers – {{ branding.company_name }}{% endblock %}
+{% block content %}
+  <section class="space-y-8">
+    <header class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div>
+        <h1 class="text-3xl font-black text-slate-900">Manage customers</h1>
+        <p class="text-sm text-slate-500">Create contacts, trigger portal invites, and keep details up to date.</p>
+      </div>
+      {% if portal_enabled %}
+        <span class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-700">
+          <span class="size-2 rounded-full bg-emerald-400"></span>
+          Portal invites enabled
+        </span>
+      {% else %}
+        <span class="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-sm font-semibold text-amber-700">
+          <span class="size-2 rounded-full bg-amber-400"></span>
+          Enable portal invites in settings
+        </span>
+      {% endif %}
+    </header>
+
+    <div class="card">
+      <h2 class="text-lg font-semibold text-slate-900">Add customer</h2>
+      <form method="post" action="{{ url_for('admin.admin_customers') }}" class="mt-4 space-y-4">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="action" value="create">
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="space-y-1">
+            <label for="admin_customer_name" class="text-sm font-medium text-slate-700">Customer name</label>
+            <input type="text" id="admin_customer_name" name="name" required class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+          </div>
+          <div class="space-y-1">
+            <label for="admin_customer_company" class="text-sm font-medium text-slate-700">Company</label>
+            <input type="text" id="admin_customer_company" name="company_name" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+          </div>
+        </div>
+        <div class="space-y-1">
+          <label for="admin_customer_email" class="text-sm font-medium text-slate-700">Email</label>
+          <input type="email" id="admin_customer_email" name="email" required class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+        </div>
+        {{ ui.button("Save customer", icon="person_add", type="submit", extra_classes="w-full sm:w-auto justify-center") }}
+      </form>
+    </div>
+
+    {% if customer_rows %}
+      <div class="overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-card">
+        <table class="min-w-full divide-y divide-slate-200">
+          <thead class="bg-slate-50 text-left text-xs font-semibold uppercase tracking-wide text-slate-500">
+            <tr>
+              <th class="px-6 py-3">Customer</th>
+              <th class="px-6 py-3">Company</th>
+              <th class="px-6 py-3">Email</th>
+              <th class="px-6 py-3">Invite status</th>
+              <th class="px-6 py-3 text-right">Actions</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-slate-200">
+            {% for row in customer_rows %}
+              {% set customer = row.customer %}
+              <tr class="hover:bg-slate-50">
+                <td class="px-6 py-4 text-sm font-medium text-slate-900">{{ customer.name }}</td>
+                <td class="px-6 py-4 text-sm text-slate-500">{{ customer.company_name or '—' }}</td>
+                <td class="px-6 py-4 text-sm text-slate-500">{{ customer.email }}</td>
+                <td class="px-6 py-4 text-sm text-slate-500">
+                  <div class="space-y-1">
+                    {{ ui.status_badge(row.invite.state, row.invite.label) }}
+                    {% if row.invite.detail %}
+                      <p class="text-xs text-slate-400">{{ row.invite.detail }}</p>
+                    {% endif %}
+                  </div>
+                </td>
+                <td class="px-6 py-4 text-right text-sm">
+                  <div class="flex flex-wrap justify-end gap-2">
+                    {% if portal_enabled %}
+                      <form method="post" action="{{ url_for('admin.admin_customer_invite', customer_id=customer.id) }}">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                        <input type="hidden" name="redirect" value="{{ request.full_path }}">
+                        <button type="submit" class="btn-primary justify-center {% if row.invite.state == 'pending' %}opacity-60 cursor-not-allowed{% endif %}" {% if row.invite.state == 'pending' %}disabled{% endif %}>
+                          Send invite
+                        </button>
+                      </form>
+                    {% endif %}
+                    <a href="{{ url_for('admin.admin_customer_edit', customer_id=customer.id) }}" class="btn-secondary justify-center">Edit</a>
+                    <form method="post" action="{{ url_for('admin.admin_customers') }}" onsubmit="return confirm('Delete {{ customer.name }}?');">
+                      <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+                      <input type="hidden" name="action" value="delete">
+                      <input type="hidden" name="customer_id" value="{{ customer.id }}">
+                      <button type="submit" class="btn-secondary justify-center">Delete</button>
+                    </form>
+                  </div>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% else %}
+      <div class="flex flex-col items-center gap-4 rounded-2xl border border-dashed border-slate-300 bg-slate-50 px-6 py-16 text-center">
+        <p class="text-lg font-semibold text-slate-700">No customers captured yet</p>
+        <p class="max-w-md text-sm text-slate-500">Add your first customer to start assigning proofs and sending invites.</p>
+      </div>
+    {% endif %}
+  </section>
+{% endblock %}

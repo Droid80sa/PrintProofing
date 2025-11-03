@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Compare Versions – {{ branding.company_name }}{% endblock %}
+{% block content %}
+  <section class="mx-auto max-w-3xl space-y-6 text-center">
+    <h1 class="text-3xl font-black text-slate-900">Compare versions</h1>
+    <p class="text-sm text-slate-500">This feature is coming soon. You&apos;ll be able to review different versions of <strong>{{ proof.job_name }}</strong> side by side.</p>
+    <div class="flex justify-center">
+      {{ ui.button("Back to proof", href=url_for('show_proof', job_id=proof.share_id), variant="secondary", extra_classes="justify-center") }}
+    </div>
+  </section>
+{% endblock %}

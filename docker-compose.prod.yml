@@ -1,0 +1,44 @@
+services:
+  web:
+    build:
+      context: .
+    image: proofs-app:latest
+    depends_on:
+      db:
+        condition: service_healthy
+    env_file:
+      - .env
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql+psycopg2://postgres:postgres@db:5432/proofs_app}
+      FILE_STORAGE_ROOT: /mnt/proofs
+      RUN_MIGRATIONS: ${RUN_MIGRATIONS:-true}
+      WAIT_FOR_DB: ${WAIT_FOR_DB:-true}
+    ports:
+      - "5010:5000"
+    volumes:
+      - proofs_media:/mnt/proofs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "python -c 'import urllib.request,sys; sys.exit(0 if urllib.request.urlopen(\"http://localhost:5000/_healthz\").getcode()==200 else 1)'"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-postgres}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-postgres}
+      POSTGRES_DB: ${POSTGRES_DB:-proofs_app}
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-postgres}"]
+      interval: 30s
+      timeout: 5s
+      retries: 5
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  proofs_media:
+  postgres_data:

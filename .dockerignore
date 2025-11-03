@@ -1,0 +1,16 @@
+.git
+.github
+venv
+__pycache__
+*.pyc
+.pytest_cache
+node_modules
+Dockerfile.dev
+docker-compose.override.yml
+*.log
+*.sqlite
+tests/__pycache__
+docs/_build
+Updated UI/*.psd
+*.DS_Store
+

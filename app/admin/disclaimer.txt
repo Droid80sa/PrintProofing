@@ -1,0 +1,19 @@
+<p>
+  Before we proceed to print,
+  <strong
+    >please ensure that you have carefully reviewed all aspects of your
+    proof</strong
+  >, including: text, editing, layout and design elements. By approving this
+  proof, you confirm that you have checked and are satisfied with its accuracy.
+</p>
+<p></p>
+<p>
+  While we take every precaution to achieve the best possible results,
+  <strong>PLEASE NOTE:</strong> Electronic proofs are suitable for checking
+  details and layout only. Color representation may vary between screens and
+  final prints.
+  <strong>Unless a printed proof is approved and signed by you</strong>, we
+  cannot be held responsible for any errors or omissions, or if the colour or
+  quality does not meet your expectations.
+</p>
+<p>Thank you.</p>

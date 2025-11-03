@@ -1,0 +1,325 @@
+{% extends "base.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Upload Proof – {{ branding.company_name }}{% endblock %}
+{% block content %}
+  <section class="mx-auto max-w-4xl space-y-6">
+    <header class="space-y-2">
+      <h1 class="text-3xl font-black text-slate-900">Upload a proof</h1>
+      <p class="text-sm text-slate-500">Attach the latest version, assign a designer, and optionally notify the customer immediately.</p>
+    </header>
+
+    {% if not designer_readonly and designers|length == 0 %}
+      <div class="rounded-xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-700">
+        No designers available. Create a designer account under Admin → Users before uploading.
+      </div>
+    {% endif %}
+
+    <div class="card">
+      <form method="post" enctype="multipart/form-data" id="uploadForm" action="{{ url_for('upload') }}" class="space-y-6">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+
+        {% if designer_readonly and current_designer %}
+          <div class="space-y-1">
+            <label class="text-sm font-medium text-slate-700">Designer</label>
+            <p class="text-sm font-semibold text-slate-900">{{ current_designer.display_name }}</p>
+            <p class="text-xs text-slate-400">This proof will be assigned to you.</p>
+            <input type="hidden" name="designer_id" value="{{ current_designer.id }}">
+          </div>
+        {% else %}
+          <div class="space-y-1">
+            <label for="designer-select" class="text-sm font-medium text-slate-700">Designer</label>
+            <select id="designer-select" name="designer_id" required class="form-select block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+              <option value="" disabled {% if not selected_designer_id %}selected{% endif %}>Select a designer</option>
+              {% if self_option_label %}
+                <option value="__self__" {% if selected_designer_id == '__self__' %}selected{% endif %}>{{ self_option_label }}</option>
+              {% endif %}
+              {% for designer in designers %}
+                <option value="{{ designer.id }}" {% if designer.id|string == selected_designer_id|string %}selected{% endif %}>{{ designer.display_name }}</option>
+              {% endfor %}
+            </select>
+            <p class="text-xs text-slate-400">Choose who owns this proof. Manage designers under Admin → Users.</p>
+          </div>
+        {% endif %}
+
+        <div class="space-y-4">
+          <div class="space-y-1">
+            <span class="text-sm font-medium text-slate-700">Recipient</span>
+            <div class="flex flex-wrap gap-3 text-sm">
+              <label class="inline-flex items-center gap-2">
+                <input type="radio" name="recipient_mode" value="existing" class="h-4 w-4 text-brand-primary focus:ring-brand-primary" {% if recipient_mode != 'guest' %}checked{% endif %}>
+                <span>Existing customer</span>
+              </label>
+              <label class="inline-flex items-center gap-2">
+                <input type="radio" name="recipient_mode" value="guest" class="h-4 w-4 text-brand-primary focus:ring-brand-primary" {% if recipient_mode == 'guest' %}checked{% endif %}>
+                <span>One-off recipient</span>
+              </label>
+            </div>
+          </div>
+
+          <div id="existing-recipient-fields" class="space-y-1">
+            <label for="customer-select" class="text-sm font-medium text-slate-700">Customer</label>
+            <select id="customer-select" name="customer_id" class="form-select block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" {% if recipient_mode != 'guest' %}required{% endif %}>
+              <option value="" disabled {% if not selected_customer_id %}selected{% endif %}>Select a customer</option>
+              {% for customer in customers %}
+                <option value="{{ customer.id }}" {% if customer.id|string == selected_customer_id|string %}selected{% endif %}>{{ customer.name }}</option>
+              {% endfor %}
+            </select>
+            <p class="text-xs text-slate-400">Choose the customer for this proof.</p>
+          </div>
+
+          <div id="guest-recipient-fields" class="space-y-3 {% if recipient_mode != 'guest' %}hidden{% endif %}">
+            <div class="space-y-1">
+              <label for="guest-email" class="text-sm font-medium text-slate-700">Recipient email</label>
+              <input type="email" id="guest-email" name="guest_email" value="{{ guest_email_value }}" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="client@example.com">
+            </div>
+            <div class="space-y-1">
+              <label for="guest-name" class="text-sm font-medium text-slate-700">Recipient name <span class="text-slate-400">(optional)</span></label>
+              <input type="text" id="guest-name" name="guest_name" value="{{ guest_name_value }}" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="Alex Client">
+            </div>
+            <div class="space-y-1">
+              <label for="guest-expiry" class="text-sm font-medium text-slate-700">PIN expiry (hours)</label>
+              <input type="number" id="guest-expiry" name="guest_expiry_hours" value="{{ guest_expiry_value }}" min="1" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="168">
+              <p class="text-xs text-slate-400">Leave blank to expire after 7 days.</p>
+            </div>
+            <p class="text-xs text-slate-500">We&apos;ll email a unique link and one-time PIN to this recipient. They won&apos;t be stored in the customer list.</p>
+          </div>
+        </div>
+
+        <div class="grid gap-4 sm:grid-cols-2">
+          <div class="space-y-1 sm:col-span-2">
+            <label for="job-name" class="text-sm font-medium text-slate-700">Job name (client facing)</label>
+            <input type="text" id="job-name" name="job_name" value="{{ job_name_value }}" required class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="Homepage redesign">
+            <p class="text-xs text-slate-400">This name will be visible to the client.</p>
+          </div>
+          <div class="sm:col-span-2 space-y-1">
+            <label for="notes" class="text-sm font-medium text-slate-700">Optional notes</label>
+            <textarea id="notes" name="notes" rows="4" class="form-textarea block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="Add any context or instructions for the client.">{{ notes_value }}</textarea>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label for="file-upload" class="text-sm font-medium text-slate-700">Select PDF or image</label>
+          <input type="file" id="file-upload" name="file" accept=".pdf,.jpg,.jpeg,.png" required class="block w-full rounded-lg border border-dashed border-slate-300 px-4 py-10 text-sm text-slate-500 file:mr-4 file:rounded-lg file:border-0 file:bg-brand-primary file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:brightness-110">
+          <p class="text-xs text-slate-400">Accepted formats: PDF, JPG, JPEG, PNG.</p>
+        </div>
+
+        <div id="uploadProgressWrapper" class="hidden items-center gap-3 rounded-lg border border-slate-200 bg-slate-50 px-4 py-3" role="status">
+          <progress id="uploadProgress" value="0" max="100" class="h-2 w-full rounded-full bg-slate-200"></progress>
+          <span id="uploadProgressLabel" class="text-xs font-medium text-slate-600">Preparing upload…</span>
+        </div>
+
+        <div class="space-y-2 rounded-xl border border-slate-200 bg-slate-50 p-4">
+          <label class="flex items-center gap-2 text-sm font-medium text-slate-700">
+            <input type="checkbox" id="notify-customer" name="notify_customer" class="h-4 w-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary" {% if notify_customer_checked %}checked{% endif %}>
+            Notify customer now
+          </label>
+          <p class="text-xs text-slate-500">Send an email with the proof link immediately after upload.</p>
+          <div class="flex flex-wrap gap-2">
+            <button type="button" class="btn-secondary justify-center" id="compose-notification" disabled>Compose email</button>
+          </div>
+          <p class="text-xs text-slate-400">Available placeholders: <code>{{'{{customer_name}}'}}</code>, <code>{{'{{job_name}}'}}</code>, <code>{{'{{proof_link}}'}}</code>, <code>{{'{{designer_name}}'}}</code></p>
+        </div>
+
+        <input type="hidden" name="notify_subject" id="notify-subject-hidden" value="{{ notify_subject_value }}">
+        <textarea name="notify_body" id="notify-body-hidden" hidden>{{ notify_body_value }}</textarea>
+
+        <button type="submit" class="btn-primary w-full justify-center" id="uploadSubmit">
+          <span class="material-symbols-outlined text-base">upload</span>
+          Upload proof
+        </button>
+      </form>
+      <p class="mt-3 hidden text-xs text-slate-400" id="uploadFallbackHint">If upload stalls, reload the page and try again.</p>
+    </div>
+  </section>
+
+  <div id="notifyModal" class="fixed inset-0 z-40 hidden items-center justify-center bg-slate-900/50 px-4">
+    <div class="w-full max-w-2xl rounded-2xl bg-white p-6 shadow-2xl">
+      <div class="space-y-3">
+        <h2 class="text-lg font-semibold text-slate-900">Compose customer email</h2>
+        <p class="text-sm text-slate-500">Use the placeholders listed above. The final email will automatically include the proof link.</p>
+      </div>
+      <div class="mt-4 space-y-4">
+        <div class="space-y-1">
+          <label for="notify-modal-subject" class="text-sm font-medium text-slate-700">Subject</label>
+          <input type="text" id="notify-modal-subject" maxlength="255" class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+        </div>
+        <div class="space-y-1">
+          <label for="notify-modal-body" class="text-sm font-medium text-slate-700">Message</label>
+          <textarea id="notify-modal-body" rows="8" class="form-textarea block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary"></textarea>
+        </div>
+        <div class="flex flex-wrap justify-end gap-3">
+          <button type="button" class="btn-primary" id="notify-save">Save message</button>
+          <button type="button" class="btn-secondary" id="notify-cancel">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function () {
+      const form = document.getElementById('uploadForm');
+      if (!form || !window.XMLHttpRequest) {
+        return;
+      }
+      const fileInput = document.getElementById('file-upload');
+      const progressWrapper = document.getElementById('uploadProgressWrapper');
+      const progressBar = document.getElementById('uploadProgress');
+      const progressLabel = document.getElementById('uploadProgressLabel');
+      const submitButton = document.getElementById('uploadSubmit');
+      const fallbackHint = document.getElementById('uploadFallbackHint');
+
+      form.addEventListener('submit', function (evt) {
+        if (!fileInput.files.length) {
+          return;
+        }
+        evt.preventDefault();
+
+        const formData = new FormData(form);
+        const xhr = new XMLHttpRequest();
+
+        progressWrapper.classList.remove('hidden');
+        fallbackHint?.classList.remove('hidden');
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<span class="material-symbols-outlined text-base">hourglass_top</span> Uploading…';
+
+        xhr.upload.addEventListener('progress', function (event) {
+          if (!event.lengthComputable) {
+            return;
+          }
+          const percent = Math.round((event.loaded / event.total) * 100);
+          progressBar.value = percent;
+          progressLabel.textContent = percent >= 100 ? 'Processing server response…' : `Uploading ${percent}%`;
+        });
+
+        xhr.addEventListener('load', function () {
+          if (xhr.status >= 200 && xhr.status < 300) {
+            document.open();
+            document.write(xhr.responseText);
+            document.close();
+          } else {
+            progressLabel.textContent = 'Upload failed. Please try again.';
+            submitButton.disabled = false;
+            submitButton.innerHTML = '<span class="material-symbols-outlined text-base">upload</span> Upload proof';
+          }
+        });
+
+        xhr.addEventListener('error', function () {
+          progressLabel.textContent = 'Network error. Please retry.';
+          submitButton.disabled = false;
+          submitButton.innerHTML = '<span class="material-symbols-outlined text-base">upload</span> Upload proof';
+        });
+
+        xhr.open('POST', form.action, true);
+        xhr.setRequestHeader('Accept', 'text/html');
+        xhr.send(formData);
+      });
+    })();
+
+    (function () {
+      const notifyCheckbox = document.getElementById('notify-customer');
+      const composeButton = document.getElementById('compose-notification');
+      const customerSelect = document.getElementById('customer-select');
+      const recipientRadios = document.querySelectorAll('input[name="recipient_mode"]');
+      const existingFields = document.getElementById('existing-recipient-fields');
+      const guestFields = document.getElementById('guest-recipient-fields');
+      const modal = document.getElementById('notifyModal');
+      const modalSubject = document.getElementById('notify-modal-subject');
+      const modalBody = document.getElementById('notify-modal-body');
+      const modalSave = document.getElementById('notify-save');
+      const modalCancel = document.getElementById('notify-cancel');
+      const hiddenSubject = document.getElementById('notify-subject-hidden');
+      const hiddenBody = document.getElementById('notify-body-hidden');
+
+      const defaultSubjectTemplate = {{ default_notify_subject_template|tojson }};
+      const defaultBodyTemplate = {{ default_notify_body_template|tojson }};
+
+      function toggleModal(show) {
+        if (!modal) return;
+        if (show) {
+          modal.classList.remove('hidden');
+          modal.classList.add('flex');
+          modalSubject.value = hiddenSubject.value || defaultSubjectTemplate;
+          modalBody.value = hiddenBody.value || defaultBodyTemplate;
+          setTimeout(() => modalSubject.focus(), 50);
+        } else {
+          modal.classList.add('hidden');
+          modal.classList.remove('flex');
+        }
+      }
+
+      function currentRecipientMode() {
+        const checked = Array.from(recipientRadios || []).find(radio => radio.checked);
+        return checked ? checked.value : 'existing';
+      }
+
+      function customerSelected() {
+        if (currentRecipientMode() === 'guest') {
+          return true;
+        }
+        return customerSelect && customerSelect.value;
+      }
+
+      function updateComposeState() {
+        const enabled = notifyCheckbox && notifyCheckbox.checked && customerSelected();
+        if (composeButton) {
+          composeButton.disabled = !enabled;
+        }
+      }
+
+      function syncRecipientModeControls() {
+        const mode = currentRecipientMode();
+        const isGuest = mode === 'guest';
+        if (existingFields) {
+          existingFields.classList.toggle('hidden', isGuest);
+        }
+        if (guestFields) {
+          guestFields.classList.toggle('hidden', !isGuest);
+        }
+        if (customerSelect) {
+          if (isGuest) {
+            customerSelect.setAttribute('disabled', 'disabled');
+            customerSelect.removeAttribute('required');
+            customerSelect.value = '';
+          } else {
+            customerSelect.removeAttribute('disabled');
+            customerSelect.setAttribute('required', 'required');
+          }
+        }
+        if (notifyCheckbox) {
+          if (isGuest) {
+            notifyCheckbox.checked = true;
+            notifyCheckbox.setAttribute('disabled', 'disabled');
+          } else {
+            notifyCheckbox.removeAttribute('disabled');
+          }
+        }
+        updateComposeState();
+      }
+
+      if (notifyCheckbox) {
+        notifyCheckbox.addEventListener('change', updateComposeState);
+      }
+      if (customerSelect) {
+        customerSelect.addEventListener('change', updateComposeState);
+      }
+      if (recipientRadios) {
+        recipientRadios.forEach(radio => radio.addEventListener('change', syncRecipientModeControls));
+      }
+      if (composeButton) {
+        composeButton.addEventListener('click', () => {
+          if (!composeButton.disabled) {
+            toggleModal(true);
+          }
+        });
+      }
+      modalCancel?.addEventListener('click', () => toggleModal(false));
+      modalSave?.addEventListener('click', () => {
+        hiddenSubject.value = (modalSubject.value || '').trim() || defaultSubjectTemplate;
+        hiddenBody.value = (modalBody.value || '').trim() || defaultBodyTemplate;
+        toggleModal(false);
+      });
+
+      syncRecipientModeControls();
+    })();
+  </script>
+{% endblock %}

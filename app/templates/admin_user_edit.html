@@ -1,0 +1,102 @@
+{% extends "base.html" %}
+{% import 'components/ui_macros.html' as ui %}
+{% block title %}Edit User – {{ user.email }}{% endblock %}
+{% block content %}
+  <section class="mx-auto max-w-3xl space-y-6">
+    <header>
+      <h1 class="text-3xl font-black text-slate-900">Edit user</h1>
+      <p class="text-sm text-slate-500">Update profile details and SMTP configuration for {{ user.email }}.</p>
+    </header>
+
+    <div class="card space-y-4">
+      <form method="post" class="space-y-4">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="space-y-1">
+          <label for="name" class="text-sm font-medium text-slate-700">Name</label>
+          <input type="text" id="name" name="name" value="{{ user.name }}" required class="form-input w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+        </div>
+        <div class="space-y-1">
+          <label for="email" class="text-sm font-medium text-slate-700">Email</label>
+          <input type="email" id="email" name="email" value="{{ user.email }}" required class="form-input w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+        </div>
+        <div class="space-y-1">
+          <label for="role" class="text-sm font-medium text-slate-700">Role</label>
+          <select id="role" name="role" class="form-select w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+            <option value="admin" {% if user.role == 'admin' %}selected{% endif %}>Admin</option>
+            <option value="designer" {% if user.role == 'designer' %}selected{% endif %}>Designer</option>
+          </select>
+        </div>
+        <div class="space-y-1">
+          <label for="reply_to" class="text-sm font-medium text-slate-700">Designer reply-to email</label>
+          <input type="email" id="reply_to" name="designer_reply_to" value="{{ user.designer_profile.reply_to_email if user.designer_profile else '' }}" class="form-input w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary" placeholder="Overrides email when clients reply">
+        </div>
+
+        <fieldset class="space-y-4">
+          <legend class="text-sm font-semibold text-slate-700">SMTP settings</legend>
+          {% set smtp_configured = user.smtp_host and user.smtp_port %}
+          {% if not smtp_configured %}
+            <div class="rounded-lg border border-amber-200 bg-amber-50 px-4 py-3 text-sm text-amber-700">Configure SMTP host and port to enable per-user delivery.</div>
+          {% elif user.smtp_last_test_status == 'failed' %}
+            <div class="rounded-lg border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">
+              Last test failed{% if user.smtp_last_test_at %} on {{ user.smtp_last_test_at.strftime('%Y-%m-%d %H:%M UTC') }}{% endif %}.
+              {% if user.smtp_last_error %}<br><small>{{ user.smtp_last_error }}</small>{% endif %}
+            </div>
+          {% elif user.smtp_last_test_status == 'success' %}
+            <div class="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-700">
+              Last test succeeded{% if user.smtp_last_test_at %} on {{ user.smtp_last_test_at.strftime('%Y-%m-%d %H:%M UTC') }}{% endif %}.
+            </div>
+          {% else %}
+            <div class="rounded-lg border border-sky-200 bg-sky-50 px-4 py-3 text-sm text-sky-700">SMTP test has not been run yet for this user.</div>
+          {% endif %}
+
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="space-y-1">
+              <label for="smtp_host" class="text-sm font-medium text-slate-700">SMTP host</label>
+              <input type="text" id="smtp_host" name="smtp_host" value="{{ user.smtp_host or '' }}" class="form-input w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+            </div>
+            <div class="space-y-1">
+              <label for="smtp_port" class="text-sm font-medium text-slate-700">SMTP port</label>
+              <input type="number" id="smtp_port" name="smtp_port" value="{{ user.smtp_port or '' }}" min="1" class="form-input w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+            </div>
+          </div>
+          <div class="grid gap-4 sm:grid-cols-2">
+            <div class="space-y-1">
+              <label for="smtp_username" class="text-sm font-medium text-slate-700">SMTP username</label>
+              <input type="text" id="smtp_username" name="smtp_username" value="{{ user.smtp_username or '' }}" class="form-input w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+            </div>
+            <div class="space-y-1">
+              <label for="smtp_password" class="text-sm font-medium text-slate-700">SMTP password</label>
+              <input type="password" id="smtp_password" name="smtp_password" value="{{ user.smtp_password or '' }}" class="form-input w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+            </div>
+          </div>
+          <div class="flex items-center gap-6">
+            <label class="flex items-center gap-2 text-sm text-slate-600"><input type="checkbox" name="smtp_use_tls" value="1" {% if user.smtp_use_tls %}checked{% endif %} class="h-4 w-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary"> Use STARTTLS</label>
+            <label class="flex items-center gap-2 text-sm text-slate-600"><input type="checkbox" name="smtp_use_ssl" value="1" {% if user.smtp_use_ssl %}checked{% endif %} class="h-4 w-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary"> Use SSL</label>
+          </div>
+          <div class="space-y-1">
+            <label for="smtp_sender" class="text-sm font-medium text-slate-700">SMTP sender</label>
+            <input type="email" id="smtp_sender" name="smtp_sender" value="{{ user.smtp_sender or user.email }}" class="form-input w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+          </div>
+          <div class="space-y-1">
+            <label for="smtp_reply_to" class="text-sm font-medium text-slate-700">SMTP reply-to</label>
+            <input type="email" id="smtp_reply_to" name="smtp_reply_to" value="{{ user.smtp_reply_to or '' }}" class="form-input w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+          </div>
+        </fieldset>
+
+        {{ ui.button("Save changes", type="submit", extra_classes="justify-center") }}
+      </form>
+    </div>
+
+    <div class="card">
+      <h2 class="text-lg font-semibold text-slate-900">Send SMTP test</h2>
+      <form method="post" action="{{ url_for('admin.admin_user_smtp_test', user_id=user.id) }}" class="mt-3 space-y-3 sm:flex sm:items-end sm:space-x-3 sm:space-y-0">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <div class="flex-1 space-y-1">
+          <label for="test_email" class="text-sm font-medium text-slate-700">Send test email to</label>
+          <input type="email" id="test_email" name="test_email" value="{{ user.email }}" required class="form-input w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+        </div>
+        {{ ui.button("Send test", icon="send", type="submit", extra_classes="justify-center" ) }}
+      </form>
+    </div>
+  </section>
+{% endblock %}
