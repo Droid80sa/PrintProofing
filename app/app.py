@@ -281,8 +281,23 @@ def handle_large_file(e):
 
 @app.route("/")
 def home():
-    """Home route, simple message indicating system is running."""
-    return "Proof approval system is running."
+    """Landing page with quick navigation to the appropriate login flows."""
+    user = g.get("current_user")
+    if user:
+        if user.role == "admin":
+            return redirect(url_for("admin.admin_dashboard"))
+        if user.role == "designer":
+            return redirect(url_for("designer_dashboard"))
+        return redirect(url_for("login"))
+
+    customer = g.get("current_customer")
+    if customer:
+        return redirect(url_for("customer.dashboard"))
+
+    return render_template(
+        "landing.html",
+        customer_login_enabled=app.config.get("CUSTOMER_LOGIN_ENABLED", False),
+    )
 
 @app.route("/proofs/<path:filename>")
 def serve_proof(filename):

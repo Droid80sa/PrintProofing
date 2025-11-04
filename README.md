@@ -42,7 +42,7 @@ Tailwind assets, runs migrations, and keeps proof uploads on a dedicated volume.
 2. Build the image (this compiles Python dependencies and Tailwind CSS):
 
    ```bash
-   docker compose -f docker-compose.prod.yml build
+   Can we cra
    ```
 
 3. Start the stack:

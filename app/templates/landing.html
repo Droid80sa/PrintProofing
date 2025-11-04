@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Welcome – {{ branding.company_name }}{% endblock %}
+{% block content %}
+  <section class="flex flex-col items-center gap-10 py-16 text-center">
+    <div class="max-w-2xl space-y-4">
+      <span class="inline-flex items-center rounded-full bg-brand-primary/10 px-4 py-1 text-sm font-semibold uppercase tracking-wide text-brand-primary">
+        {{ branding.company_name }}
+      </span>
+      <h1 class="text-4xl font-black text-slate-900 sm:text-5xl">Proof approval portal</h1>
+      <p class="text-lg text-slate-600">
+        Welcome! Choose your workspace below to review proofs, manage projects, or approve designs.
+      </p>
+    </div>
+
+    <div class="grid w-full max-w-4xl gap-6 sm:grid-cols-2">
+      <div class="rounded-2xl border border-slate-200 bg-white p-8 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        <h2 class="text-2xl font-semibold text-slate-900">Team login</h2>
+        <p class="mt-2 text-sm text-slate-600">Admins and designers can access dashboards, upload proofs, and manage customers.</p>
+        <a href="{{ url_for('login') }}" class="mt-6 inline-flex items-center justify-center rounded-xl bg-brand-primary px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-brand-primary/90">
+          Continue to team login
+        </a>
+      </div>
+
+      <div class="rounded-2xl border border-slate-200 bg-white p-8 text-left shadow-sm transition hover:-translate-y-1 hover:shadow-lg">
+        <h2 class="text-2xl font-semibold text-slate-900">Customer login</h2>
+        {% if customer_login_enabled %}
+          <p class="mt-2 text-sm text-slate-600">Customers can review proofs, leave feedback, and track approvals in one place.</p>
+          <a href="{{ url_for('customer.login') }}" class="mt-6 inline-flex items-center justify-center rounded-xl bg-slate-900 px-5 py-3 text-sm font-semibold text-white shadow-sm transition hover:bg-slate-800">
+            Continue to customer portal
+          </a>
+        {% else %}
+          <p class="mt-2 text-sm text-slate-600">Customer login is currently disabled. Contact the team if you need assistance.</p>
+          <div class="mt-6 inline-flex items-center rounded-xl border border-dashed border-slate-300 px-5 py-3 text-sm font-semibold text-slate-500">
+            Portal coming soon
+          </div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div class="max-w-2xl text-sm text-slate-500">
+      <p>If you received a guest review link, use the secure URL provided in your email to access your proof directly.</p>
+    </div>
+  </section>
+{% endblock %}
