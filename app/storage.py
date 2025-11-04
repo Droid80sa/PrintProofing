@@ -2,7 +2,7 @@ import abc
 import os
 from datetime import datetime, timedelta
 from typing import Optional
-from urllib.parse import quote
+from urllib.parse import quote, urlparse
 
 try:
     import boto3
@@ -56,10 +56,15 @@ class LocalStorage(BaseStorage):
             os.remove(path)
 
     def generate_url(self, storage_key: str, expires_in: int = 3600) -> str:
+        encoded_key = quote(storage_key)
         if self.public_base_url:
             expiry = int((datetime.utcnow() + timedelta(seconds=expires_in)).timestamp())
-            return f"{self.public_base_url}/{quote(storage_key)}?expires={expiry}"
-        return f"/storage/local/{quote(storage_key)}"
+            base = self.public_base_url.rstrip("/")
+            parsed = urlparse(self.public_base_url)
+            if not parsed.path or parsed.path == "/":
+                base = f"{base}/storage/local"
+            return f"{base}/{encoded_key}?expires={expiry}"
+        return f"/storage/local/{encoded_key}"
 
     def resolve_path(self, storage_key: str) -> str:
         return self._path(storage_key)
