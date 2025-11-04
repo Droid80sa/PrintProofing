@@ -3,9 +3,15 @@
 {% block content %}
   <section class="flex flex-col items-center gap-10 py-16 text-center">
     <div class="max-w-2xl space-y-4">
-      <span class="inline-flex items-center rounded-full bg-brand-primary/10 px-4 py-1 text-sm font-semibold uppercase tracking-wide text-brand-primary">
-        {{ branding.company_name }}
-      </span>
+      {% if branding.logo_url %}
+        <div class="flex justify-center">
+          <img src="{{ branding.logo_url }}" alt="{{ branding.company_name }} logo" class="h-16 w-auto object-contain">
+        </div>
+      {% else %}
+        <span class="inline-flex items-center rounded-full bg-brand-primary/10 px-4 py-1 text-sm font-semibold uppercase tracking-wide text-brand-primary">
+          {{ branding.company_name }}
+        </span>
+      {% endif %}
       <h1 class="text-4xl font-black text-slate-900 sm:text-5xl">Proof approval portal</h1>
       <p class="text-lg text-slate-600">
         Welcome! Choose your workspace below to review proofs, manage projects, or approve designs.
