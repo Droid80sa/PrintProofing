@@ -4,6 +4,7 @@ import os
 import uuid
 from datetime import datetime
 from io import StringIO
+import io
 
 from flask import (
     Blueprint,
@@ -24,6 +25,7 @@ from sqlalchemy.orm import joinedload
 
 from app.extensions import db
 from app.models import Customer, Designer, NotificationTemplate, Proof, User
+from app.user_import import import_users_from_csv
 from app.utils import login_required, _user_smtp_settings, send_email_notification  # Import necessary functions from app.utils
 from app.customer_bp import (
     InviteAlreadyPendingError,
@@ -166,6 +168,35 @@ def admin_users():
                 user.password_hash = generate_password_hash(new_password)
                 db.session.commit()
                 flash(f"✅ Password reset for {user.email}.", "success")
+
+            elif action == "import_csv":
+                uploaded = request.files.get("csv_file")
+                delimiter_choice = request.form.get("delimiter") or "auto"
+                skip_existing = request.form.get("skip_existing") == "1"
+
+                if not uploaded or not uploaded.filename:
+                    raise ValueError("Select a CSV file to upload.")
+
+                raw = uploaded.read()
+                if not raw:
+                    raise ValueError("Uploaded CSV is empty.")
+
+                try:
+                    text = raw.decode("utf-8-sig")
+                except UnicodeDecodeError:
+                    text = raw.decode("utf-8")
+
+                delimiter = None if delimiter_choice == "auto" else delimiter_choice
+                summary = import_users_from_csv(
+                    io.StringIO(text),
+                    delimiter=delimiter,
+                    skip_existing=skip_existing,
+                    dry_run=False,
+                )
+                flash(
+                    f"✅ Imported {summary.created} user(s); skipped {summary.skipped}.",
+                    "success",
+                )
 
             elif action == "update_role":
                 user_id = request.form.get("user_id")

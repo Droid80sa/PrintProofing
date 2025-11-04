@@ -75,8 +75,10 @@ Postgres instance you can remove the bundled `db` service.
 
 Create a CSV with at least `email` and `password` columns (optional: `name`,
 `display_name`, `role`, `reply_to`, `smtp_host`, `smtp_port`, `smtp_username`,
-`smtp_password`, `smtp_sender`, `smtp_reply`). For semicolon-delimited files use
-the default command; pass `--delimiter ','` for comma-separated files:
+`smtp_password`, `smtp_sender`, `smtp_reply`). Upload it from Admin → Users →
+“Import users from CSV” in the UI, or run the helper script. For
+semicolon-delimited files use the default command; pass `--delimiter ','` for
+comma-separated files:
 
 ```bash
 docker compose -f docker-compose.prod.yml run --rm \

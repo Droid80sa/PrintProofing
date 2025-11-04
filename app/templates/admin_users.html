@@ -46,6 +46,32 @@
     </div>
 
     <div class="card">
+      <h2 class="text-lg font-semibold text-slate-900">Import users from CSV</h2>
+      <p class="mt-1 text-sm text-slate-500">Upload a CSV containing columns like <code>email</code>, <code>password</code>, <code>role</code>, and SMTP settings to bulk add accounts.</p>
+      <form method="post" action="{{ url_for('admin.admin_users') }}" enctype="multipart/form-data" class="mt-4 grid gap-4 sm:grid-cols-2">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token }}">
+        <input type="hidden" name="action" value="import_csv">
+        <div class="space-y-1 sm:col-span-2">
+          <label for="admin-user-import-file" class="text-sm font-medium text-slate-700">CSV file</label>
+          <input type="file" id="admin-user-import-file" name="csv_file" accept=".csv" required class="form-input block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+        </div>
+        <div class="space-y-1">
+          <label for="admin-user-import-delimiter" class="text-sm font-medium text-slate-700">Delimiter</label>
+          <select id="admin-user-import-delimiter" name="delimiter" class="form-select block w-full rounded-lg border-slate-300 focus:border-brand-primary focus:ring-brand-primary">
+            <option value="auto" selected>Auto detect</option>
+            <option value=";">Semicolon (;)</option>
+            <option value=",">Comma (,)</option>
+          </select>
+        </div>
+        <div class="flex items-center gap-2">
+          <input type="checkbox" id="admin-user-import-skip" name="skip_existing" value="1" class="h-4 w-4 rounded border-slate-300 text-brand-primary focus:ring-brand-primary">
+          <label for="admin-user-import-skip" class="text-sm text-slate-700">Skip users that already exist</label>
+        </div>
+        {{ ui.button("Import users", type="submit", extra_classes="sm:col-span-2 justify-center") }}
+      </form>
+    </div>
+
+    <div class="card">
       <h2 class="text-lg font-semibold text-slate-900">Existing users</h2>
       {% if users %}
         <div class="mt-4 overflow-hidden rounded-xl border border-slate-200">
