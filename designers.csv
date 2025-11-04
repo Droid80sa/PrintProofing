@@ -1,0 +1,12 @@
+﻿email ;name;password;display_name;role;SMTP Host;SMTP Port;SMTP Username;SMTP Sender;SMTP Reply
+production@hotink.co.za;Garth;gar@55l0ng;Garth;Admin;geniusmail.rocketseed.com;587;production@hotink.co.za;production@hotink.co.za;production@hotink.co.za
+cheslyn@hotink.co.za;Cheslyn;che@55long;Cheslyn;Designer;geniusmail.rocketseed.com;587;cheslyn@hotink.co.za;cheslyn@hotink.co.za;cheslyn@hotink.co.za
+antonet@hotink.co.za;Antonet;ant@55l0ng;Antonet;Designer;geniusmail.rocketseed.com;587;antonet@hotink.co.za;antonet@hotink.co.za;antonet@hotink.co.za
+angie@hotink.co.za;Angie;ang@55l0ng;Angie;Designer;geniusmail.rocketseed.com;587;angie@hotink.co.za;angie@hotink.co.za;angie@hotink.co.za
+danelle@hotink.co.za;Danelle;dan@55l0ng;Danelle;Designer;geniusmail.rocketseed.com;587;danelle@hotink.co.za;danelle@hotink.co.za;danelle@hotink.co.za
+pieter@hotink.co.za;Pieter;pie@55l0ng;Pieter;Designer;geniusmail.rocketseed.com;587;pieter@hotink.co.za;pieter@hotink.co.za;pieter@hotink.co.za
+nicole@hotink.co.za;Nicole;nic@55l0ng;Nicole;Designer;geniusmail.rocketseed.com;587;nicole@hotink.co.za;nicole@hotink.co.za;nicole@hotink.co.za
+info@hotink.co.za;Secret;sec@55l0ng;Secret;Designer;geniusmail.rocketseed.com;587;info@hotink.co.za;info@hotink.co.za;info@hotink.co.za
+jp@hotink.co.za;JP;jp@55l0ng;JP;Designer;geniusmail.rocketseed.com;587;jp@hotink.co.za;jp@hotink.co.za;jp@hotink.co.za
+lisa@hotink.co.za;Lisa;lis@55l0ng;Lisa;Admin;geniusmail.rocketseed.com;587;lisa@hotink.co.za;lisa@hotink.co.za;lisa@hotink.co.za
+signage@hotink.co.za;Justin;jus@55l0ng;Justin;Designer;geniusmail.rocketseed.com;587;signage@hotink.co.za;signage@hotink.co.za;signage@hotink.co.za

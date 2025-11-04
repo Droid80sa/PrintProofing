@@ -64,12 +64,29 @@ Tailwind assets, runs migrations, and keeps proof uploads on a dedicated volume.
 5. Persisted data lives in two volumes:
    - `proofs_media` for uploaded proofs (mounted at `/mnt/proofs` inside the
      container).
-   - `postgres_data` for the Postgres cluster.
+- `postgres_data` for the Postgres cluster.
 
 For remote deployments, push the built image to your registry and reuse the same
 `docker-compose.prod.yml` (or translate it to your orchestration platform).
 Set `DATABASE_URL` to your production database; when pointing at a managed
 Postgres instance you can remove the bundled `db` service.
+
+### Bulk-import designers
+
+Create a CSV with at least `email` and `password` columns (optional: `name`,
+`display_name`, `role`, `reply_to`, `smtp_host`, `smtp_port`, `smtp_username`,
+`smtp_password`, `smtp_sender`, `smtp_reply`). For semicolon-delimited files use
+the default command; pass `--delimiter ','` for comma-separated files:
+
+```bash
+docker compose -f docker-compose.prod.yml run --rm \
+  --entrypoint python \
+  -v "$(pwd)/designers.csv:/tmp/designers.csv:ro" \
+  web scripts/import_designers.py --csv /tmp/designers.csv
+```
+
+Add `--dry-run` to preview changes or `--skip-existing` to ignore duplicate
+emails gracefully.
 
 ## Front-End Assets
 

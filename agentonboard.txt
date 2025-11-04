@@ -42,3 +42,9 @@ Currently if a designer send off a proof, there has to be a customer created for
 docker compose logs web | grep -A40 "ERROR in app
 
 git remote set-url origin https://github.com/Droid80sa/PrintProofing.git
+
+docker compose logs web | tail -n 200   
+docker compose exec web alembic upgrade head 
+
+
+docker compose -f docker-compose.prod.yml run --rm web flask --app app.app create-user --email andrew@hotink.co.za --name "Andrew" --role admin
